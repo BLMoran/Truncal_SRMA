@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr Benjamin Moran">
+<meta name="dcterms.date" content="2023-07-04">
+
+<title>Truncal Analgesia for Midline Laparotomy</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Statistical Analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Statistical Analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="Statistical Analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="Statistical Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Statistical Analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Statistical Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Statistical Analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Statistical Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Statistical Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Statistical Analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#the-meta-analysis-model" id="toc-the-meta-analysis-model" class="nav-link" data-scroll-target="#the-meta-analysis-model"><span class="header-section-number">2</span> The Meta Analysis Model</a></li>
+  <li><a href="#choice-of-prior" id="toc-choice-of-prior" class="nav-link" data-scroll-target="#choice-of-prior"><span class="header-section-number">3</span> Choice of Prior</a>
+  <ul>
+  <li><a href="#prior-for-mean-difference" id="toc-prior-for-mean-difference" class="nav-link" data-scroll-target="#prior-for-mean-difference"><span class="header-section-number">3.0.1</span> Prior for Mean Difference</a></li>
+  <li><a href="#prior-for-the-variance" id="toc-prior-for-the-variance" class="nav-link" data-scroll-target="#prior-for-the-variance"><span class="header-section-number">3.0.2</span> Prior for the Variance</a></li>
+  </ul></li>
+  <li><a href="#primary-outcome" id="toc-primary-outcome" class="nav-link" data-scroll-target="#primary-outcome"><span class="header-section-number">4</span> Primary Outcome</a>
+  <ul>
+  <li><a href="#dynamic-pain-at-24-hours" id="toc-dynamic-pain-at-24-hours" class="nav-link" data-scroll-target="#dynamic-pain-at-24-hours"><span class="header-section-number">4.1</span> Dynamic Pain at 24 Hours</a>
+  <ul class="collapse">
+  <li><a href="#forest-plot" id="toc-forest-plot" class="nav-link" data-scroll-target="#forest-plot"><span class="header-section-number">4.1.1</span> Forest Plot</a></li>
+  <li><a href="#posterior-probability-plots" id="toc-posterior-probability-plots" class="nav-link" data-scroll-target="#posterior-probability-plots"><span class="header-section-number">4.1.2</span> Posterior Probability Plots</a></li>
+  <li><a href="#bivariate-posterior-probability-plot" id="toc-bivariate-posterior-probability-plot" class="nav-link" data-scroll-target="#bivariate-posterior-probability-plot"><span class="header-section-number">4.1.3</span> Bivariate Posterior Probability Plot</a></li>
+  <li><a href="#sensitivity-analysis-using-other-priors" id="toc-sensitivity-analysis-using-other-priors" class="nav-link" data-scroll-target="#sensitivity-analysis-using-other-priors"><span class="header-section-number">4.1.4</span> Sensitivity Analysis Using Other Priors</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#secondary-outcomes" id="toc-secondary-outcomes" class="nav-link" data-scroll-target="#secondary-outcomes"><span class="header-section-number">5</span> Secondary Outcomes</a>
+  <ul>
+  <li><a href="#dynamic-pain-at-48-and-72-hours" id="toc-dynamic-pain-at-48-and-72-hours" class="nav-link" data-scroll-target="#dynamic-pain-at-48-and-72-hours"><span class="header-section-number">5.0.1</span> Dynamic Pain at 48 and 72 Hours</a></li>
+  <li><a href="#opioid-consumption-at-24-48-and-72-hours" id="toc-opioid-consumption-at-24-48-and-72-hours" class="nav-link" data-scroll-target="#opioid-consumption-at-24-48-and-72-hours"><span class="header-section-number">5.0.2</span> Opioid Consumption at 24, 48 and 72 Hours</a></li>
+  <li><a href="#bivariate-posterior-probability-plots" id="toc-bivariate-posterior-probability-plots" class="nav-link" data-scroll-target="#bivariate-posterior-probability-plots"><span class="header-section-number">5.0.3</span> Bivariate Posterior Probability Plots</a></li>
+  <li><a href="#surgical-outcomes-procedural-morbidity-and-opioid-side-effects" id="toc-surgical-outcomes-procedural-morbidity-and-opioid-side-effects" class="nav-link" data-scroll-target="#surgical-outcomes-procedural-morbidity-and-opioid-side-effects"><span class="header-section-number">5.0.4</span> Surgical Outcomes, Procedural Morbidity and Opioid Side-Effects</a></li>
+  </ul></li>
+  <li><a href="#subgroup-analyses" id="toc-subgroup-analyses" class="nav-link" data-scroll-target="#subgroup-analyses"><span class="header-section-number">6</span> Subgroup Analyses</a>
+  <ul>
+  <li><a href="#single-shot-truncal-blocks" id="toc-single-shot-truncal-blocks" class="nav-link" data-scroll-target="#single-shot-truncal-blocks"><span class="header-section-number">6.0.1</span> Single Shot Truncal Blocks</a></li>
+  <li><a href="#placebo-continuous-infusions" id="toc-placebo-continuous-infusions" class="nav-link" data-scroll-target="#placebo-continuous-infusions"><span class="header-section-number">6.0.2</span> Placebo Continuous Infusions</a></li>
+  <li><a href="#thoracic-epidural" id="toc-thoracic-epidural" class="nav-link" data-scroll-target="#thoracic-epidural"><span class="header-section-number">6.0.3</span> Thoracic Epidural</a></li>
+  <li><a href="#wound-infusion" id="toc-wound-infusion" class="nav-link" data-scroll-target="#wound-infusion"><span class="header-section-number">6.0.4</span> Wound Infusion</a></li>
+  </ul></li>
+  <li><a href="#metaregression" id="toc-metaregression" class="nav-link" data-scroll-target="#metaregression"><span class="header-section-number">7</span> Metaregression</a></li>
+  <li><a href="#bayesian-sequential-analysis" id="toc-bayesian-sequential-analysis" class="nav-link" data-scroll-target="#bayesian-sequential-analysis"><span class="header-section-number">8</span> Bayesian Sequential Analysis</a></li>
+  <li><a href="#assessment-of-small-sample-bias-including-publication-bias" id="toc-assessment-of-small-sample-bias-including-publication-bias" class="nav-link" data-scroll-target="#assessment-of-small-sample-bias-including-publication-bias"><span class="header-section-number">9</span> Assessment of Small Sample Bias (Including Publication Bias)</a>
+  <ul>
+  <li><a href="#bayesian-regression-test" id="toc-bayesian-regression-test" class="nav-link" data-scroll-target="#bayesian-regression-test"><span class="header-section-number">9.0.1</span> Bayesian Regression Test</a></li>
+  <li><a href="#bayesian-model-averaging" id="toc-bayesian-model-averaging" class="nav-link" data-scroll-target="#bayesian-model-averaging"><span class="header-section-number">9.0.2</span> Bayesian Model Averaging</a></li>
+  <li><a href="#summary-table" id="toc-summary-table" class="nav-link" data-scroll-target="#summary-table"><span class="header-section-number">9.0.3</span> Summary Table</a></li>
+  <li><a href="#posterior-distribution-plots-to-visualise-the-effect-of-small-study-bias" id="toc-posterior-distribution-plots-to-visualise-the-effect-of-small-study-bias" class="nav-link" data-scroll-target="#posterior-distribution-plots-to-visualise-the-effect-of-small-study-bias"><span class="header-section-number">9.0.4</span> Posterior Distribution Plots to Visualise the Effect of Small Study Bias</a></li>
+  </ul></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation"><span class="header-section-number">10</span> Interpretation</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">11</span> References</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Truncal Analgesia for Midline Laparotomy</h1>
+<p class="subtitle lead">A Bayesian Systematic Review and Meta Anlaysis, Metaregression and Trial Sequential Analysis</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr Benjamin Moran </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 4, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>This is an explanation of the Bayesian analysis of the meta analysis examining the effects of truncal analgesia (e.g.&nbsp;TAP, Rectus Sheath, Perperitoneal, Erector Spinae, Paravertebral Blocks) compared to placebo, thoracic epidural and wound catheters for midline laparotomies in elective surgery.</p>
+</section>
+<section id="the-meta-analysis-model" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="the-meta-analysis-model"><span class="header-section-number">2</span> The Meta Analysis Model</h2>
+<p>As we anticipate a high level of heterogeneity due to differing patient cohorts, different pathologies and small studies, we will use a random-effects (hierarchical) model. The Bayesian meta-analytic (hierarchical) model is given by:</p>
+<p><span class="math display">\[
+\begin{align*}
+y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
+\theta_i &amp; \sim Normal(\mu, \tau^2)\\
+\mu &amp; =  \alpha_{subgroup[k]}\\
+\\
+\alpha &amp; \sim \operatorname{Normal}(0, 1) \tag{Priors} \\
+\tau &amp; \sim \operatorname{Half-Cauchy}(0, 0.5) \\
+\end{align*}
+\]</span></p>
+<p>where <span class="math inline">\(y_i\)</span> is the observed mean difference in the dynamic numerical rating scale (NRS) of truncal blocks versus non-truncal regional analgesia for midline laparotomy, and <span class="math inline">\(\sigma_i^2\)</span> is the known sampling variance in the study <span class="math inline">\(i\)</span>. Each study, <span class="math inline">\(i\)</span> has it’s own distribution with a mean effect, <span class="math inline">\(\theta_i\)</span>. <span class="math inline">\(\theta_i\)</span> is from a normal distribution with a mean effect <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\tau^2\)</span> (which represents the between-study heterogeneity). The mean effect, <span class="math inline">\(\mu\)</span>, is predicted by a linear regression, where each subgroup <span class="math inline">\(k\)</span> (Control, Placebo, Thoracic Epidural, Wound Catheter) has it’s own mean effect, given by <span class="math inline">\(\alpha\)</span>.</p>
+</section>
+<section id="choice-of-prior" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="choice-of-prior"><span class="header-section-number">3</span> Choice of Prior</h2>
+<section id="prior-for-mean-difference" class="level4" data-number="3.0.1">
+<h4 data-number="3.0.1" class="anchored" data-anchor-id="prior-for-mean-difference"><span class="header-section-number">3.0.1</span> Prior for Mean Difference</h4>
+<p>The mean difference in interventional pain studies can potentially have no effect (mean difference = 0), or can result in total resolution of pain (mean difference = 10). It is unlikley that a pain intervention will result in improvement in NRS more than 5/10. However, it should also be noted that if a pain intervention has no effect on acute pain, a pain score may increase due to continued or worsening nociception, resulting in a positive mean difference. Again,this is unlikely to result in a mean difference of -10, and is less likely to exceed -5. Hence, we will use a weakly informative prior for <span class="math inline">\(\alpha\)</span>, ie <span class="math inline">\(Normal(0,1)\)</span>.</p>
+<p>This gives:</p>
+<p><span class="math display">\[\begin{align*}
+\alpha &amp; \sim \operatorname{Normal}(0, 1) \
+\end{align*}\]</span></p>
+</section>
+<section id="prior-for-the-variance" class="level4" data-number="3.0.2">
+<h4 data-number="3.0.2" class="anchored" data-anchor-id="prior-for-the-variance"><span class="header-section-number">3.0.2</span> Prior for the Variance</h4>
+<p>The variance, <span class="math inline">\(\tau^2\)</span>, is non-negative, even though it can be close to 0 (Note- a fixed effects model is one where <span class="math inline">\(\tau^2 = 0\)</span>). A commonly used distribution is the Half-Cauchy distribution, which is a special case of the positive half of the Cauchy distribution. Having a shape parameter of 0.5 ensures a flatter distribution, which is more conservative.</p>
+<p>This gives:</p>
+<p><span class="math display">\[\begin{align*}
+\tau &amp; \sim \operatorname{Half-Cauchy}(0, 0.5) \
+\end{align*}\]</span></p>
+</section>
+</section>
+<section id="primary-outcome" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="primary-outcome"><span class="header-section-number">4</span> Primary Outcome</h2>
+<section id="dynamic-pain-at-24-hours" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="dynamic-pain-at-24-hours"><span class="header-section-number">4.1</span> Dynamic Pain at 24 Hours</h3>
+<section id="forest-plot" class="level4" data-number="4.1.1">
+<h4 data-number="4.1.1" class="anchored" data-anchor-id="forest-plot"><span class="header-section-number">4.1.1</span> Forest Plot</h4>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All Studies</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Excluding Studies at High RoB</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-hash="Statistical-Analysis_cache/html/fig-forest-all-studies_76cc5578f48972647d2146b2a941899f">
+<div class="cell-output-display">
+<div id="fig-forest-all-studies" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Statistical-Analysis_files/figure-html/fig-forest-all-studies-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Forest plot of all studies.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+
+</div>
+</div>
+</div>
+</section>
+<section id="posterior-probability-plots" class="level4" data-number="4.1.2">
+<h4 data-number="4.1.2" class="anchored" data-anchor-id="posterior-probability-plots"><span class="header-section-number">4.1.2</span> Posterior Probability Plots</h4>
+</section>
+<section id="bivariate-posterior-probability-plot" class="level4" data-number="4.1.3">
+<h4 data-number="4.1.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plot"><span class="header-section-number">4.1.3</span> Bivariate Posterior Probability Plot</h4>
+<p>Compared to a univariate outcome, a multivariate (or bivariate in this case) is advantageous when the outcomes are correlated. In pain studies, a benefit in pain may not be obvious, particularly when alternate analgesia is given (ie no difference in pain scores, but an increase in opioid consumption). Hence, we are interested in modelling the bivariate outcome of dynamic pain scores and opioid consumption. Fitting a Bayesian model allows us to generate conditional probabilities where we may determine:</p>
+<ul>
+<li><p>Probability of reduction in pain scores AND a reduction in opioid consumption</p></li>
+<li><p>Probability of reduction in pain scores AND an increase in opioid consumption</p></li>
+<li><p>Probability of an increase in pain scores AND a reduction in opioid consumption</p></li>
+<li><p>Probability of an increase in pain scores AND an increase in opioid consumption.</p></li>
+</ul>
+<p><strong>The Likelihood</strong></p>
+<p>The bivariate likelihood is more complex compared to that of the univariate outcome.</p>
+<p><strong>Priors</strong></p>
+<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-3_4111dbd47f3d4ee26a2a07562ceca45e">
+<div class="cell-output-display">
+<p><img src="Statistical-Analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" style="width:90.0%"></p>
+</div>
+<div class="cell-output-display">
+
+<div id="cryjixximy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cryjixximy table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#cryjixximy thead, #cryjixximy tbody, #cryjixximy tfoot, #cryjixximy tr, #cryjixximy td, #cryjixximy th {
+  border-style: none;
+}
+
+#cryjixximy p {
+  margin: 0;
+  padding: 0;
+}
+
+#cryjixximy .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#cryjixximy .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cryjixximy .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#cryjixximy .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#cryjixximy .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cryjixximy .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cryjixximy .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cryjixximy .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#cryjixximy .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#cryjixximy .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#cryjixximy .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#cryjixximy .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#cryjixximy .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#cryjixximy .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#cryjixximy .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#cryjixximy .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#cryjixximy .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#cryjixximy .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#cryjixximy .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cryjixximy .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cryjixximy .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cryjixximy .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#cryjixximy .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cryjixximy .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#cryjixximy .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cryjixximy .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cryjixximy .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cryjixximy .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#cryjixximy .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cryjixximy .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#cryjixximy .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cryjixximy .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cryjixximy .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cryjixximy .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cryjixximy .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cryjixximy .gt_left {
+  text-align: left;
+}
+
+#cryjixximy .gt_center {
+  text-align: center;
+}
+
+#cryjixximy .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#cryjixximy .gt_font_normal {
+  font-weight: normal;
+}
+
+#cryjixximy .gt_font_bold {
+  font-weight: bold;
+}
+
+#cryjixximy .gt_font_italic {
+  font-style: italic;
+}
+
+#cryjixximy .gt_super {
+  font-size: 65%;
+}
+
+#cryjixximy .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#cryjixximy .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cryjixximy .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cryjixximy .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cryjixximy .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cryjixximy .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cryjixximy .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="">Bivariate Outcome of Dynamic Pain &amp; Opioid Use at 24 Hours</td>
+    </tr>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Outcome">Outcome</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Probability">Probability</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &lt; 0 &amp; Opioid MD &lt; 0</td>
+<td headers="Probability" class="gt_row gt_right">0.77</td></tr>
+    <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &lt; 0 &amp; Opioid MD &gt; 0</td>
+<td headers="Probability" class="gt_row gt_right">0.19</td></tr>
+    <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &gt; 0 &amp; Opioid MD &lt; 0</td>
+<td headers="Probability" class="gt_row gt_right">0.02</td></tr>
+    <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &gt; 0 &amp; Opioid MD &gt; 0</td>
+<td headers="Probability" class="gt_row gt_right">0.01</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="2"> Pain MD = Mean Difference in Dynamic Numerical Pain Scale</td>
+    </tr>
+    <tr>
+      <td class="gt_footnote" colspan="2"> Opioid MD = Mean Difference in Oral Morphine Equivalents</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="sensitivity-analysis-using-other-priors" class="level4" data-number="4.1.4">
+<h4 data-number="4.1.4" class="anchored" data-anchor-id="sensitivity-analysis-using-other-priors"><span class="header-section-number">4.1.4</span> Sensitivity Analysis Using Other Priors</h4>
+</section>
+</section>
+</section>
+<section id="secondary-outcomes" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="secondary-outcomes"><span class="header-section-number">5</span> Secondary Outcomes</h2>
+<section id="dynamic-pain-at-48-and-72-hours" class="level4" data-number="5.0.1">
+<h4 data-number="5.0.1" class="anchored" data-anchor-id="dynamic-pain-at-48-and-72-hours"><span class="header-section-number">5.0.1</span> Dynamic Pain at 48 and 72 Hours</h4>
+</section>
+<section id="opioid-consumption-at-24-48-and-72-hours" class="level4" data-number="5.0.2">
+<h4 data-number="5.0.2" class="anchored" data-anchor-id="opioid-consumption-at-24-48-and-72-hours"><span class="header-section-number">5.0.2</span> Opioid Consumption at 24, 48 and 72 Hours</h4>
+</section>
+<section id="bivariate-posterior-probability-plots" class="level4" data-number="5.0.3">
+<h4 data-number="5.0.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plots"><span class="header-section-number">5.0.3</span> Bivariate Posterior Probability Plots</h4>
+</section>
+<section id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects" class="level4" data-number="5.0.4">
+<h4 data-number="5.0.4" class="anchored" data-anchor-id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects"><span class="header-section-number">5.0.4</span> Surgical Outcomes, Procedural Morbidity and Opioid Side-Effects</h4>
+<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-4_9829b06315e1eac01221880c2a88d575">
+<div class="cell-output-display">
+
+<div id="bomsxskyye" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bomsxskyye table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bomsxskyye thead, #bomsxskyye tbody, #bomsxskyye tfoot, #bomsxskyye tr, #bomsxskyye td, #bomsxskyye th {
+  border-style: none;
+}
+
+#bomsxskyye p {
+  margin: 0;
+  padding: 0;
+}
+
+#bomsxskyye .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bomsxskyye .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bomsxskyye .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bomsxskyye .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bomsxskyye .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bomsxskyye .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bomsxskyye .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bomsxskyye .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bomsxskyye .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bomsxskyye .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bomsxskyye .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bomsxskyye .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bomsxskyye .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bomsxskyye .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bomsxskyye .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bomsxskyye .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bomsxskyye .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bomsxskyye .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bomsxskyye .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bomsxskyye .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bomsxskyye .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bomsxskyye .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bomsxskyye .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bomsxskyye .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bomsxskyye .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bomsxskyye .gt_left {
+  text-align: left;
+}
+
+#bomsxskyye .gt_center {
+  text-align: center;
+}
+
+#bomsxskyye .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bomsxskyye .gt_font_normal {
+  font-weight: normal;
+}
+
+#bomsxskyye .gt_font_bold {
+  font-weight: bold;
+}
+
+#bomsxskyye .gt_font_italic {
+  font-style: italic;
+}
+
+#bomsxskyye .gt_super {
+  font-size: 65%;
+}
+
+#bomsxskyye .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bomsxskyye .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bomsxskyye .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bomsxskyye .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bomsxskyye .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bomsxskyye .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bomsxskyye .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings gt_spanner_row">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2" scope="colgroup" id="<strong>Intervention</strong>">
+        <span class="gt_column_spanner"><strong>Intervention</strong></span>
+      </th>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Control</strong>, N = 32<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Control</strong>, N = 32<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Truncal Block</strong>, N = 32<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Truncal Block</strong>, N = 32<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="3" class="gt_group_heading" scope="colgroup" id="Surgical Outcomes">Surgical Outcomes</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Surgical Outcomes  label" class="gt_row gt_left">Hospital LOS</td>
+<td headers="Surgical Outcomes  stat_1" class="gt_row gt_center">6.51 (5.00, 8.15)</td>
+<td headers="Surgical Outcomes  stat_2" class="gt_row gt_center">6.15 (5.00, 7.88)</td></tr>
+    <tr><td headers="Surgical Outcomes  label" class="gt_row gt_left">Time to First Bowel Sounds (Hrs)</td>
+<td headers="Surgical Outcomes  stat_1" class="gt_row gt_center">61 (47, 72)</td>
+<td headers="Surgical Outcomes  stat_2" class="gt_row gt_center">54 (48, 65)</td></tr>
+    <tr><td headers="Surgical Outcomes  label" class="gt_row gt_left">Time to Ambulation (Hrs)</td>
+<td headers="Surgical Outcomes  stat_1" class="gt_row gt_center">33 (23, 43)</td>
+<td headers="Surgical Outcomes  stat_2" class="gt_row gt_center">29 (28, 39)</td></tr>
+    <tr><td headers="Surgical Outcomes  label" class="gt_row gt_left">Ileus</td>
+<td headers="Surgical Outcomes  stat_1" class="gt_row gt_center">4.00 (3.50, 5.50)</td>
+<td headers="Surgical Outcomes  stat_2" class="gt_row gt_center">9.00 (5.50, 10.50)</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="3" class="gt_group_heading" scope="colgroup" id="Procedural Morbidity">Procedural Morbidity</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Procedural Morbidity  label" class="gt_row gt_left">Procedural Complication</td>
+<td headers="Procedural Morbidity  stat_1" class="gt_row gt_center">0.00 (0.00, 1.25)</td>
+<td headers="Procedural Morbidity  stat_2" class="gt_row gt_center">0.00 (0.00, 1.00)</td></tr>
+    <tr><td headers="Procedural Morbidity  label" class="gt_row gt_left">Block Failure</td>
+<td headers="Procedural Morbidity  stat_1" class="gt_row gt_center">2.00 (1.50, 4.50)</td>
+<td headers="Procedural Morbidity  stat_2" class="gt_row gt_center">1.00 (0.50, 3.00)</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="3" class="gt_group_heading" scope="colgroup" id="Opioid Side Effects">Opioid Side Effects</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Opioid Side Effects  label" class="gt_row gt_left">Sedation</td>
+<td headers="Opioid Side Effects  stat_1" class="gt_row gt_center">1.00 (0.00, 1.25)</td>
+<td headers="Opioid Side Effects  stat_2" class="gt_row gt_center">0.50 (0.00, 1.25)</td></tr>
+    <tr><td headers="Opioid Side Effects  label" class="gt_row gt_left">Nausea &amp; Vomiting</td>
+<td headers="Opioid Side Effects  stat_1" class="gt_row gt_center">3.5 (1.0, 6.3)</td>
+<td headers="Opioid Side Effects  stat_2" class="gt_row gt_center">2.5 (0.0, 6.3)</td></tr>
+    <tr><td headers="Opioid Side Effects  label" class="gt_row gt_left">Hypotension</td>
+<td headers="Opioid Side Effects  stat_1" class="gt_row gt_center">1.00 (0.00, 4.50)</td>
+<td headers="Opioid Side Effects  stat_2" class="gt_row gt_center">0.00 (0.00, 1.50)</td></tr>
+    <tr><td headers="Opioid Side Effects  label" class="gt_row gt_left">Pruritis</td>
+<td headers="Opioid Side Effects  stat_1" class="gt_row gt_center">1.00 (0.75, 4.25)</td>
+<td headers="Opioid Side Effects  stat_2" class="gt_row gt_center">0.00 (0.00, 2.00)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Median (IQR)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="subgroup-analyses" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="subgroup-analyses"><span class="header-section-number">6</span> Subgroup Analyses</h2>
+<section id="single-shot-truncal-blocks" class="level4" data-number="6.0.1">
+<h4 data-number="6.0.1" class="anchored" data-anchor-id="single-shot-truncal-blocks"><span class="header-section-number">6.0.1</span> Single Shot Truncal Blocks</h4>
+</section>
+<section id="placebo-continuous-infusions" class="level4" data-number="6.0.2">
+<h4 data-number="6.0.2" class="anchored" data-anchor-id="placebo-continuous-infusions"><span class="header-section-number">6.0.2</span> Placebo Continuous Infusions</h4>
+</section>
+<section id="thoracic-epidural" class="level4" data-number="6.0.3">
+<h4 data-number="6.0.3" class="anchored" data-anchor-id="thoracic-epidural"><span class="header-section-number">6.0.3</span> Thoracic Epidural</h4>
+</section>
+<section id="wound-infusion" class="level4" data-number="6.0.4">
+<h4 data-number="6.0.4" class="anchored" data-anchor-id="wound-infusion"><span class="header-section-number">6.0.4</span> Wound Infusion</h4>
+</section>
+</section>
+<section id="metaregression" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="metaregression"><span class="header-section-number">7</span> Metaregression</h2>
+</section>
+<section id="bayesian-sequential-analysis" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="bayesian-sequential-analysis"><span class="header-section-number">8</span> Bayesian Sequential Analysis</h2>
+</section>
+<section id="assessment-of-small-sample-bias-including-publication-bias" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="assessment-of-small-sample-bias-including-publication-bias"><span class="header-section-number">9</span> Assessment of Small Sample Bias (Including Publication Bias)</h2>
+<section id="bayesian-regression-test" class="level4" data-number="9.0.1">
+<h4 data-number="9.0.1" class="anchored" data-anchor-id="bayesian-regression-test"><span class="header-section-number">9.0.1</span> Bayesian Regression Test</h4>
+</section>
+<section id="bayesian-model-averaging" class="level4" data-number="9.0.2">
+<h4 data-number="9.0.2" class="anchored" data-anchor-id="bayesian-model-averaging"><span class="header-section-number">9.0.2</span> Bayesian Model Averaging</h4>
+</section>
+<section id="summary-table" class="level4" data-number="9.0.3">
+<h4 data-number="9.0.3" class="anchored" data-anchor-id="summary-table"><span class="header-section-number">9.0.3</span> Summary Table</h4>
+</section>
+<section id="posterior-distribution-plots-to-visualise-the-effect-of-small-study-bias" class="level4" data-number="9.0.4">
+<h4 data-number="9.0.4" class="anchored" data-anchor-id="posterior-distribution-plots-to-visualise-the-effect-of-small-study-bias"><span class="header-section-number">9.0.4</span> Posterior Distribution Plots to Visualise the Effect of Small Study Bias</h4>
+</section>
+</section>
+<section id="interpretation" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="interpretation"><span class="header-section-number">10</span> Interpretation</h2>
+</section>
+<section id="references" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="references"><span class="header-section-number">11</span> References</h2>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

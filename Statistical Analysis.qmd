@@ -1,0 +1,1063 @@
+---
+title: "Truncal Analgesia for Midline Laparotomy" 
+subtitle: "A Bayesian Systematic Review and Meta Anlaysis, Metaregression and Trial Sequential Analysis"
+author: "Dr Benjamin Moran"
+date: today
+format: html
+toc: true
+toc-location: left
+toc-depth: 4
+number-sections: true
+editor: visual
+---
+
+## Introduction
+
+This is an explanation of the Bayesian analysis of the meta analysis examining the effects of truncal analgesia (e.g. TAP, Rectus Sheath, Perperitoneal, Erector Spinae, Paravertebral Blocks) compared to placebo, thoracic epidural and wound catheters for midline laparotomies in elective surgery.
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(metafor)
+library(brms)
+library(cmdstanr)
+library(parallel)
+library(tidybayes)
+library(ggridges)
+library(gt)
+library(gtsummary)
+
+knitr::opts_chunk$set(echo = F, message = F, warning = F, error = T, 
+                      fig.height = 3, out.width = "90%", 
+                      dev = "png", dpi = 300, cache = T)
+
+# Import the Data
+truncal2 <- read.csv(paste0("Data/Data_Split_Multiarm_Trials 10_7_22.csv"))
+
+#Clean Column Names & Remove 'et al.'
+truncal2 <- truncal2 |>  
+  janitor::clean_names() |> 
+  mutate(author = stringr::str_remove(author, "et al."))
+
+# Generate Subgroups for Meta Analysis
+truncal2 <- truncal2 |>  
+  mutate(subgroup = case_when(
+    (intervention_type_intervention_1 == "Placebo") ~ "Placebo Vs Truncal Block",
+    (intervention_type_intervention_1 == "Control") ~ "Control vs Truncal Block",
+    (intervention_type_intervention_1 == "TEA") ~ "TEA Vs Truncal Block",
+    (intervention_type_intervention_1 == "TAP") ~ "Intermittent Bolus Vs Continuous Infusion",
+    (intervention_type_intervention_1 == "Wound") ~ "Wound Vs Truncal Block",
+    (intervention_type_intervention_1 == "Quadratus Lumborum") ~ "Other"),
+    subgroup = factor(subgroup,
+                      levels = c("Control vs Truncal Block",
+                                 "Placebo Vs Truncal Block",
+                                 "TEA Vs Truncal Block",
+                                 "Wound Vs Truncal Block",
+                                 "Intermittent Bolus Vs Continuous Infusion",
+                                 "Other")
+    )
+  )
+
+# Create Function to Generate Dataframes for each outcome (eg Dynamic NRS at 24, 48, 72 hours, etc) and escalc()
+var_select <- function(df, x, y, z){
+  if(missing(x)) {
+    varname1 <- paste({y}, "mean", {z}, "int1", sep = "_")} 
+  else {varname1 <- paste({x}, {y}, "mean", {z}, "int1", sep = "_")}
+  
+  if(missing(x)) {
+    varname2 <- paste({y}, "sd", {z}, "int1", sep = "_")} 
+  else {varname2 <- paste({x}, {y}, "sd", {z}, "int1", sep = "_")}
+  
+  if(missing(x)) {
+    varname3 <- paste({y}, "mean", {z}, "int2", sep = "_")} 
+  else {varname3 <- paste({x}, {y}, "mean", {z}, "int2", sep = "_")}
+  
+  if(missing(x)) {
+    varname4 <- paste({y}, "sd", {z}, "int2", sep = "_")}
+  else {varname4 <- paste({x}, {y}, "sd", {z}, "int2", sep = "_")}  
+  
+  dat <- df |> 
+    dplyr::select(author, year, intervention_type_intervention_1:intervention_type_intervention_2, subgroup, n_int1, n_int2, varname1:varname4) |> 
+    drop_na()
+  
+  dat<- metafor::escalc(measure = "MD", n1i = n_int2, n2i = n_int1, m1i = dat[[varname3]], sd1i = dat[[varname4]], 
+                        m2i = dat[[varname1]], sd2i = dat[[varname2]], data = dat) |> 
+    mutate(sei = sqrt(vi)) |> 
+    rename(
+      m1i = varname3,
+      sd1i = varname4,
+      m2i = varname1,
+      sd2i = varname2
+    ) |> 
+    mutate(outcome = {y}) |> 
+    mutate(author1 = paste(author, year, sep = " ")) |> 
+    select(author1, everything(), -author, -year)
+  
+  return(dat) 
+}
+
+# Create Dataframes for Each Outcome (ie Dynamic NRS at 24, 48, 72 Hours, etc)
+dynamic_nrs_24 <- var_select(truncal2, "dynamic", "pain", "24h") 
+dynamic_nrs_48 <- var_select(truncal2, "dynamic", "pain", "48h")
+dynamic_nrs_72 <- var_select(truncal2, "dynamic", "pain", "72h")
+static_nrs_24 <- var_select(truncal2, "static", "pain", "24h")
+static_nrs_48 <- var_select(truncal2, "static", "pain", "48h")
+static_nrs_72 <- var_select(truncal2, "static", "pain", "72h")
+ome_24 <- var_select(truncal2, , "ome", "24h")
+ome_48 <- var_select(truncal2, , "ome", "48h")
+ome_72 <- var_select(truncal2, , "ome", "72h")
+
+# First, set up priors for the brms model
+priors <- c(prior(normal(0,1), class = Intercept),
+            prior(cauchy(0,0.5), class = sd))
+
+# Now we need to create a series of functions to avoid repeating code for each subgroup
+## First, the brm function
+brm_fn <- function(data, subgroup_filter)  {
+  dat_surg_type_fn <- data|>
+    filter(subgroup == subgroup_filter)
+
+  # Run the brms model
+  m.brm <- brm(yi | se(sei) ~ 1 + (1 | author1),
+               data = dat_surg_type_fn,
+               prior = priors,
+               iter = 4000,
+               cores = detectCores(),
+               control = list(adapt_delta = 0.99),
+               backend = "cmdstanr")
+  return(m.brm)
+}
+
+# Now create the forest data function - this is used for density plots
+forest.data_fn <- function(m.brm) {
+
+  # Calculate the re-weighted estimated of each study
+  study.draws <- spread_draws(m.brm, r_author1[author1, ], b_Intercept)|>
+    mutate(b_Intercept = r_author1 + b_Intercept)
+
+  # Establish the pooled result
+  pooled.effect.draws <- spread_draws(m.brm, b_Intercept)|>
+    mutate(author1 = "Pooled Effect")
+
+  # Combine the pooled result with study estimates, then play around with the lexicon (brms mucks this up)
+  forest.data <- bind_rows(study.draws,
+                           pooled.effect.draws)|>
+    ungroup()|>
+    mutate(author1 = str_replace_all(author1, "[.]", " "),
+           author1 = reorder(author1, b_Intercept))
+  
+  return(forest.data)
+}
+
+
+# Now create forest.data.summary function
+forest.data.summary_fn <- function(data, subgroup_filter, forest.data) {
+  dat_surg_type_fn <- data|>
+    filter(subgroup == subgroup_filter)
+  
+  # Calculate mean qi based on author1
+  forest.data.summary1 <- group_by(forest.data, author1)|>
+    mean_qi(b_Intercept) 
+  
+  # Join the two dataframes based on similar author names
+  forest.data.summary <- forest.data.summary1|>
+    left_join(dat_surg_type_fn, by = "author1")|>
+    mutate(n_int1_tot = as.character(ifelse(author1 == "Pooled Effect",
+                                    sum(dat_surg_type_fn$n_int1),
+                                    n_int1)),
+         n_int2_tot = as.character(ifelse(author1 == "Pooled Effect",
+                                        sum(dat_surg_type_fn$n_int2),
+                                        n_int2)),
+           author1 = as.factor(reorder(author1, b_Intercept)))
+  
+  return(forest.data.summary)
+}
+
+
+# Finally, make the res_plot function - this will be used for columns of means, SD's, etc.
+
+res_plot_fn <- function(forest.data.summary, subgroup_filter, shrinkage_estimate, 
+                        original_estimate, truncal_n_fn, truncal_mean_sd_fn, control_n_fn, control_mean_sd_fn, m.brm) { 
+    # Extract the estimates for mu and tau
+  post.samples <- as_draws_df(m.brm, c("b_Intercept", "sd_author1__Intercept"))
+  
+  ## Create the values for shrinkage and actual effect estimates
+  res_plot_pre <- forest.data.summary|>
+  mutate(weighted_effect = paste0(sprintf('%.2f', b_Intercept), 
+                  ' [', sprintf('%.2f', .lower),
+                  ', ', sprintf('%.2f', .upper), ']'),
+         unweighted_effect = paste0(sprintf('%.2f', yi), 
+                  ' [', sprintf('%.2f', yi - 1.96*sqrt(vi)),
+                  ', ', sprintf('%.2f', yi + 1.96*sqrt(vi)), ']'))|>
+   mutate(unweighted_effect = ifelse(unweighted_effect == "NA [NA, NA]", 
+                                   paste0("Mean τ = ", 
+                                          sprintf('%.2f', mean(post.samples$sd_author1__Intercept))), unweighted_effect),
+          truncal_mean_sd = paste0(sprintf('%.2f', m2i), " (", sprintf('%.1f',sd2i), ")"),
+          control_mean_sd = paste0(sprintf('%.2f', m1i), " (", sprintf('%.1f',sd1i), ")"))|>
+    mutate(truncal_mean_sd = ifelse(truncal_mean_sd == "NA (NA)", "", truncal_mean_sd),
+             control_mean_sd = ifelse(control_mean_sd == "NA (NA)", "", control_mean_sd))
+
+# Add an additional row to the data for headings
+  new_row <- data.frame(author1 = as.factor(subgroup_filter),
+                      weighted_effect = shrinkage_estimate,
+                      unweighted_effect = original_estimate,
+                      n_int2_tot = truncal_n_fn,
+                      truncal_mean_sd = truncal_mean_sd_fn,
+                      n_int1_tot = control_n_fn,
+                      control_mean_sd = control_mean_sd_fn)
+
+  # Bind the new row with the previous dataframe and set the colours
+  res_plot <- bind_rows(res_plot_pre, new_row)|>
+          mutate(color = ifelse(author1 == "Pooled Effect", "grey60", "black"),
+                 font = ifelse(author1 == "Pooled Effect", "bold", "plain"))
+
+  return(res_plot)
+}
+
+## Now we need to run each subgroup through all the above functions
+brm_control <- brm_fn(dynamic_nrs_24, "Control vs Truncal Block")
+forest.data_control <- forest.data_fn(brm_control)
+forest.data.summary_control <- forest.data.summary_fn(dynamic_nrs_24, "Control vs Truncal Block", forest.data_control)
+res_plot_control <- res_plot_fn(forest.data.summary_control, "Control vs Truncal Block", "[95%CrI]", "[95%CrI]",
+                              "n", "Mean (SD)", "n", "Mean (SD)", brm_control)
+
+## Add an extra row to res_plot_control because we need more space at the top to fit our headings in
+new_row_res_plot_control <- data.frame(author1 = as.factor("Subgroup"),
+                      weighted_effect = "Shrinkage MD",
+                      unweighted_effect = "Observed MD",
+                      n_int2_tot = "Intervention",
+                      truncal_mean_sd = "",
+                      n_int1_tot = "Control",
+                      control_mean_sd = "",
+                      color = "black",
+                      font = "plain")
+
+res_plot_control <- bind_rows(res_plot_control, new_row_res_plot_control)
+
+# Now, the placebo subgroup
+brm_placebo <- brm_fn(dynamic_nrs_24, "Placebo Vs Truncal Block")
+forest.data_placebo <- forest.data_fn(brm_placebo)
+forest.data.summary_placebo <- forest.data.summary_fn(dynamic_nrs_24, "Placebo Vs Truncal Block", forest.data_placebo)
+res_plot_placebo <- res_plot_fn(forest.data.summary_placebo, "Placebo Vs Truncal Block", "", "", "", "", "", "", brm_placebo)
+
+# Now the TEA subgroup
+brm_tea <- brm_fn(dynamic_nrs_24, "TEA Vs Truncal Block")
+forest.data_tea <- forest.data_fn(brm_tea)
+forest.data.summary_tea <- forest.data.summary_fn(dynamic_nrs_24, "TEA Vs Truncal Block", forest.data_tea)
+res_plot_tea <- res_plot_fn(forest.data.summary_tea, "TEA Vs Truncal Block", "", "", "", "", "", "", brm_tea)
+
+# Finally, the wound subgroup
+brm_wound <- brm_fn(dynamic_nrs_24, "Wound Vs Truncal Block")
+forest.data_wound <- forest.data_fn(brm_wound)
+forest.data.summary_wound <- forest.data.summary_fn(dynamic_nrs_24, "Wound Vs Truncal Block", forest.data_wound)
+res_plot_wound <- res_plot_fn(forest.data.summary_wound, "Wound Vs Truncal Block", "", "", "", "", "", "", brm_wound)
+
+## First, control subgroup plots
+## The first plot is the forest plot itself with shrinkage densities for each study
+
+p_forest_control <- ggplot(aes(b_Intercept, 
+           relevel(author1, "Pooled Effect", after=Inf)), 
+       data = forest.data_control) +
+  # Add vertical lines for pooled effect and CI
+  geom_vline(xintercept = fixef(brm_control)[1, 1], 
+             color = "grey60", size = 1) +
+  geom_vline(xintercept = fixef(brm_control)[1, 3:4], 
+             color = "grey60", linetype = 2) +
+  geom_vline(xintercept = 0, color = "black", 
+             size = 1) +
+  # Add densities
+  geom_density_ridges(fill = "#008cba", 
+                      rel_min_height = 0.01, 
+                      col = NA, scale = 0.9,
+                      alpha = 0.8) +
+  geom_pointinterval(data = forest.data.summary_control, 
+                      linewidth = 1, color = "blue",
+                     aes(xmin = .lower, xmax = .upper)) +
+  geom_pointinterval(aes(xmin = yi - 1.96 * sqrt(vi), 
+                          xmax = yi + 1.96 * sqrt(vi), 
+                          x = yi),
+                      position = position_nudge(y = -0.11),
+                      data = forest.data.summary_control, 
+                      linewidth = 1, 
+                      col = "purple") +
+  scale_x_continuous(breaks = c(-6, -4, -2, 0, 2, 4, 6), expand = c(0,0)) +
+  coord_cartesian(xlim=c(-6,6), ylim=c(1,8)) +
+  annotate("text", x = -3.5, y = 7.5, label = "Favours\ntruncal block", fontface = "bold") +
+  annotate("text", x = 4, y = 7.5,  label = "Favours\ncontrol", fontface = "bold") +
+  theme_light() +
+  theme(axis.line = element_blank(),           # remove axis lines
+        axis.text.x = element_blank(),         # remove x-axis tick labels
+        axis.ticks.x = element_blank(),        # remove x-axis ticks
+        axis.text.y = element_blank()) +
+  xlab(NULL) +
+  ylab(NULL)
+
+# The second plot shows the mean + 95%CrI for observed + shrinkage effects for each study
+
+p_estimates_control <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_control) +
+  geom_text(aes(x = 0, label = weighted_effect), hjust = 0,
+            fontface = ifelse(grepl("Shrinkage MD|\\[95%CrI\\]", res_plot_control$weighted_effect), "bold", "plain")) + 
+  geom_text(aes(x = 1, label = unweighted_effect), hjust = 0, 
+            fontface = ifelse(grepl("Observed MD|\\[95%CrI\\]", res_plot_control$unweighted_effect), "bold", "plain")) +
+  scale_color_identity() +
+  theme_void() +
+  coord_cartesian(xlim = c(0, 2), ylim=c(1,8))
+
+# The third plot shows the study name, numbers in each group, and the relevant summary statistics
+p_studies_control <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                          data = res_plot_control) +
+  geom_text(aes(x = 0, label = author1), hjust = 0, 
+            fontface = ifelse(res_plot_control$author1 == "Control vs Truncal Block" | res_plot_control$author1 == "Subgroup", "bold", 
+                              ifelse(res_plot_control$author1 == "Pooled Effect", "italic","plain"))) +
+  geom_text(aes(x = 1.5, label = n_int2_tot), hjust = 0, 
+          fontface = ifelse(res_plot_control$n_int2_tot == "Intervention" | res_plot_control$n_int2_tot == "n", "bold", "plain")) +
+  geom_text(aes(x = 2, label = truncal_mean_sd), hjust = 0, 
+            fontface = ifelse(res_plot_control$truncal_mean_sd == "Mean (SD)", "bold", "plain")) +
+  geom_text(aes(x = 3, label = n_int1_tot), hjust = 0, 
+          fontface = ifelse(res_plot_control$n_int1_tot == "Control" |  res_plot_control$n_int1_tot == "n", "bold", "plain")) +
+  geom_text(aes(x = 3.5, label = control_mean_sd), hjust = 0, 
+            fontface = ifelse(res_plot_control$control_mean_sd == "Mean (SD)", "bold", "plain")) +
+  scale_color_identity() + # Use the specified colors directly for text color
+  theme_void() +
+  coord_cartesian(xlim = c(0, 4), ylim=c(1,8))
+
+
+## Now, the placebo subgroup - plots are as above
+
+p_forest_placebo <- ggplot(aes(b_Intercept, 
+           relevel(author1, "Pooled Effect", after=Inf)), 
+       data = forest.data_placebo) +
+  # Add vertical lines for pooled effect and CI
+  geom_vline(xintercept = fixef(brm_placebo)[1, 1], 
+             color = "grey60", size = 1) +
+  geom_vline(xintercept = fixef(brm_placebo)[1, 3:4], 
+             color = "grey60", linetype = 2) +
+  geom_vline(xintercept = 0, color = "black", 
+             size = 1) +
+  # Add densities
+  geom_density_ridges(fill = "#008cba", 
+                      rel_min_height = 0.01, 
+                      col = NA, scale = 0.9,
+                      alpha = 0.8) +
+  geom_pointinterval(data = forest.data.summary_placebo, 
+                      linewidth = 1, color = "blue",
+                     aes(xmin = .lower, xmax = .upper)) +
+  geom_pointinterval(aes(xmin = yi - 1.96 * sqrt(vi), 
+                          xmax = yi + 1.96 * sqrt(vi), 
+                          x = yi),
+                      position = position_nudge(y = -0.11),
+                      data = forest.data.summary_placebo, 
+                      linewidth = 1, 
+                      col = "purple") +
+  scale_x_continuous(breaks = c(-6, -4, -2, 0, 2, 4, 6), expand = c(0,0)) +
+  coord_cartesian(xlim=c(-6,6), ylim=c(1,11)) +
+  theme_light() +
+  theme(axis.line = element_blank(),           
+        axis.text.x = element_blank(),         
+        axis.ticks.x = element_blank(),    
+        axis.text.y = element_blank()) +
+  xlab(NULL) +
+  ylab(NULL)
+
+p_estimates_placebo <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_placebo) +
+  geom_text(aes(x = 0, label = weighted_effect), hjust = 0) + 
+  geom_text(aes(x = 1, label = unweighted_effect), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0, 2), ylim=c(1,11))
+
+p_studies_placebo <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_placebo) +
+  geom_text(aes(x = 0, label = author1), hjust = 0, fontface = ifelse(res_plot_placebo$author1 == "Placebo Vs Truncal Block", "bold", 
+                                                                        ifelse(res_plot_placebo$author1 == "Pooled Effect", "italic","plain"))) +
+  geom_text(aes(x = 1.5, label = n_int2_tot), hjust = 0) +
+  geom_text(aes(x = 2, label = truncal_mean_sd), hjust = 0) +
+  geom_text(aes(x = 3, label = n_int1_tot), hjust = 0) +
+  geom_text(aes(x = 3.5, label = control_mean_sd), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0,4))
+
+## Now, the TEA subgroup - plot descriptions as above
+
+p_forest_tea <- ggplot(aes(b_Intercept, 
+           relevel(author1, "Pooled Effect", after=Inf)), 
+       data = forest.data_tea) +
+  # Add vertical lines for pooled effect and CI
+  geom_vline(xintercept = fixef(brm_tea)[1, 1], 
+             color = "grey60", size = 1) +
+  geom_vline(xintercept = fixef(brm_tea)[1, 3:4], 
+             color = "grey60", linetype = 2) +
+  geom_vline(xintercept = 0, color = "black", 
+             size = 1) +
+  # Add densities
+  geom_density_ridges(fill = "#008cba", 
+                      rel_min_height = 0.01, 
+                      col = NA, scale = 0.9,
+                      alpha = 0.8) +
+  geom_pointinterval(data = forest.data.summary_tea, 
+                      linewidth = 1, color = "blue",
+                     aes(xmin = .lower, xmax = .upper)) +
+  geom_pointinterval(aes(xmin = yi - 1.96 * sqrt(vi), 
+                          xmax = yi + 1.96 * sqrt(vi), 
+                          x = yi),
+                      position = position_nudge(y = -0.11),
+                      data = forest.data.summary_tea, 
+                      linewidth = 1, 
+                      col = "purple") +
+  scale_x_continuous(breaks = c(-6, -4, -2, 0, 2, 4, 6), expand = c(0,0)) +
+  coord_cartesian(xlim=c(-6,6), ylim=c(1,9)) +
+  theme_light() +
+  theme(axis.line = element_blank(),           
+        axis.text.x = element_blank(),         
+        axis.ticks.x = element_blank(),    
+        axis.text.y = element_blank()) +
+  xlab(NULL) +
+  ylab(NULL)
+
+
+p_estimates_tea <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_tea) +
+  geom_text(aes(x = 0, label = weighted_effect), hjust = 0) + 
+  geom_text(aes(x = 1, label = unweighted_effect), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0, 2), ylim=c(1,9))
+
+p_studies_tea <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_tea) +
+  geom_text(aes(x = 0, label = author1), hjust = 0, fontface = ifelse(res_plot_tea$author1 == "TEA Vs Truncal Block", "bold", 
+                                                                        ifelse(res_plot_tea$author1 == "Pooled Effect", "italic","plain"))) +
+  geom_text(aes(x = 1.5, label = n_int2_tot), hjust = 0) +
+  geom_text(aes(x = 2, label = truncal_mean_sd), hjust = 0) +
+  geom_text(aes(x = 3, label = n_int1_tot), hjust = 0) +
+  geom_text(aes(x = 3.5, label = control_mean_sd), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0,4))
+
+## Then, the wound subgroup - again, plots are as above
+
+p_forest_wound <- ggplot(aes(b_Intercept, 
+           relevel(author1, "Pooled Effect", after=Inf)), 
+       data = forest.data_wound) +
+  # Add vertical lines for pooled effect and CI
+  geom_vline(xintercept = fixef(brm_wound)[1, 1], 
+             color = "grey60", size = 1) +
+  geom_vline(xintercept = fixef(brm_wound)[1, 3:4], 
+             color = "grey60", linetype = 2) +
+  geom_vline(xintercept = 0, color = "black", 
+             size = 1) +
+  # Add densities
+  geom_density_ridges(fill = "#008cba", 
+                      rel_min_height = 0.01, 
+                      col = NA, scale = 0.9,
+                      alpha = 0.8) +
+  geom_pointinterval(data = forest.data.summary_wound, 
+                      linewidth = 1, color = "blue",
+                     aes(xmin = .lower, xmax = .upper)) +
+  geom_pointinterval(aes(xmin = yi - 1.96 * sqrt(vi), 
+                          xmax = yi + 1.96 * sqrt(vi), 
+                          x = yi),
+                      position = position_nudge(y = -0.11),
+                      data = forest.data.summary_wound, 
+                      linewidth = 1, 
+                      col = "purple") +
+  scale_x_continuous(breaks = c(-6, -4, -2, 0, 2, 4, 6), expand = c(0,0)) +
+  coord_cartesian(xlim=c(-6,6), ylim=c(1,5)) +
+  theme_light() +
+  theme(axis.line = element_blank(),           
+        axis.text.x = element_blank(),         
+        axis.ticks.x = element_blank(),    
+        axis.text.y = element_blank()) +
+  xlab(NULL) +
+  ylab(NULL)
+
+
+p_estimates_wound <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_wound) +
+  geom_text(aes(x = 0, label = weighted_effect), hjust = 0) + 
+  geom_text(aes(x = 1, label = unweighted_effect), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0, 2), ylim=c(1,5))
+
+p_studies_wound <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), color = color), 
+                   data = res_plot_wound) +
+  geom_text(aes(x = 0, label = author1), hjust = 0, fontface = ifelse(res_plot_wound$author1 == "Wound Vs Truncal Block", "bold", 
+                                                                        ifelse(res_plot_wound$author1 == "Pooled Effect", "italic","plain"))) +
+  geom_text(aes(x = 1.5, label = n_int2_tot), hjust = 0) +
+  geom_text(aes(x = 2, label = truncal_mean_sd), hjust = 0) +
+  geom_text(aes(x = 3, label = n_int1_tot), hjust = 0) +
+  geom_text(aes(x = 3.5, label = control_mean_sd), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0,4))
+
+## Finally, overall effect size 
+## We must construct this separately as the functions above won't work
+## I've essentially re-written the functions but scrapped all the stuff above individual studies
+
+dat_overall <- dynamic_nrs_24
+
+brm_overall <- brm(yi|se(sei) ~ 1 + (1|author1),
+             data = dat_overall,
+             prior = priors,
+             iter = 4000,
+             control = list(adapt_delta = 0.99),
+             cores = parallel::detectCores(),
+             backend = "cmdstanr")
+
+post.samples_overall <- as_draws_df(brm_overall, c("b_Intercept", "sd_author1__Intercept"))
+
+study.draws_overall <- spread_draws(brm_overall, r_author1[author1,], b_Intercept)|> 
+  mutate(b_Intercept = r_author1 + b_Intercept)
+
+pooled.effect.draws_overall <- spread_draws(brm_overall, b_Intercept)|> 
+  mutate(author1 = "Pooled Effect")
+
+forest.data_overall <- pooled.effect.draws_overall|> 
+   ungroup()|>
+   mutate(author1 = str_replace_all(author1, "[.]", " "))|> 
+   mutate(author1 = reorder(author1, b_Intercept))
+
+forest.data.summary_overall <- group_by(forest.data_overall, author1)|> 
+  mean_qi(b_Intercept) 
+
+res_plot <- forest.data.summary_overall|>
+  mutate(weighted_effect = paste0(sprintf('%.2f', b_Intercept), 
+                  ' [', sprintf('%.2f', .lower),
+                  ', ', sprintf('%.2f', .upper), ']'),
+          unweighted_effect = paste0("Mean τ = ", 
+                                          sprintf('%.2f', mean(post.samples_overall$sd_author1__Intercept))),
+         n_int1_tot = as.character(sum(dynamic_nrs_24$n_int1)),
+         n_int2_tot = as.character(sum(dynamic_nrs_24$n_int2)),
+         truncal_mean_sd = "",
+        control_mean_sd = "",
+         colour = "grey60")
+
+new_row <- data.frame(author1 = as.factor("Overall"),
+                      weighted_effect = "",
+                      unweighted_effect = "",
+                      n_int1_tot = "",
+                      n_int2_tot = "",
+                      truncal_mean_sd = "",
+                      control_mean_sd = "",
+                      colour = "black")
+
+res_plot_overall <- bind_rows(res_plot, new_row)
+
+```
+
+## The Meta Analysis Model
+
+As we anticipate a high level of heterogeneity due to differing patient cohorts, different pathologies and small studies, we will use a random-effects (hierarchical) model. The Bayesian meta-analytic (hierarchical) model is given by:
+
+$$
+\begin{align*}
+y_i & \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
+\theta_i & \sim Normal(\mu, \tau^2)\\
+\mu & =  \alpha_{subgroup[k]}\\
+\\
+\alpha & \sim \operatorname{Normal}(0, 1) \tag{Priors} \\
+\tau & \sim \operatorname{Half-Cauchy}(0, 0.5) \\
+\end{align*}
+$$
+
+where $y_i$ is the observed mean difference in the dynamic numerical rating scale (NRS) of truncal blocks versus non-truncal regional analgesia for midline laparotomy, and $\sigma_i^2$ is the known sampling variance in the study $i$. Each study, $i$ has it's own distribution with a mean effect, $\theta_i$. $\theta_i$ is from a normal distribution with a mean effect $\mu$ and variance $\tau^2$ (which represents the between-study heterogeneity). The mean effect, $\mu$, is predicted by a linear regression, where each subgroup $k$ (Control, Placebo, Thoracic Epidural, Wound Catheter) has it's own mean effect, given by $\alpha$.
+
+## Choice of Prior
+
+#### Prior for Mean Difference
+
+The mean difference in interventional pain studies can potentially have no effect (mean difference = 0), or can result in total resolution of pain (mean difference = 10). It is unlikley that a pain intervention will result in improvement in NRS more than 5/10. However, it should also be noted that if a pain intervention has no effect on acute pain, a pain score may increase due to continued or worsening nociception, resulting in a positive mean difference. Again,this is unlikely to result in a mean difference of -10, and is less likely to exceed -5. Hence, we will use a weakly informative prior for $\alpha$, ie $Normal(0,1)$.
+
+This gives:
+
+$$\begin{align*}
+\alpha & \sim \operatorname{Normal}(0, 1) \
+\end{align*}$$
+
+#### Prior for the Variance
+
+The variance, $\tau^2$, is non-negative, even though it can be close to 0 (Note- a fixed effects model is one where $\tau^2 = 0$). A commonly used distribution is the Half-Cauchy distribution, which is a special case of the positive half of the Cauchy distribution. Having a shape parameter of 0.5 ensures a flatter distribution, which is more conservative.
+
+This gives:
+
+$$\begin{align*}
+\tau & \sim \operatorname{Half-Cauchy}(0, 0.5) \
+\end{align*}$$
+
+#### Sensitivity Analysis with Different Priors
+
+## Primary Outcome
+
+### Dynamic Pain at 24 Hours
+
+#### Forest Plot
+
+::: panel-tabset
+## All Studies
+
+```{r, echo=FALSE,results='hide',fig.keep='all'}
+#| label: fig-forest-all-studies
+#| fig-width: 15
+#| fig-height: 7
+#| fig-cap: |
+#|   Forest plot of all studies.
+
+## Now make the overall plot
+
+p_forest_overall <- ggplot(aes(b_Intercept, 
+           relevel(author1, "Pooled Effect", after=Inf)), 
+       data = forest.data_overall) +
+  # Add vertical lines for pooled effect and CI
+  geom_vline(xintercept = fixef(brm_overall)[1, 1], 
+             color = "grey60", size = 1) +
+  geom_vline(xintercept = fixef(brm_overall)[1, 3:4], 
+             color = "grey60", linetype = 2) +
+  geom_vline(xintercept = 0, color = "black", 
+             size = 1) +
+  # Add densities
+  geom_density_ridges(fill = "#008cba", 
+                      rel_min_height = 0.01, 
+                      col = NA, scale = 0.9,
+                      alpha = 0.8) +
+  geom_pointinterval(data = forest.data.summary_overall, 
+                      linewidth = 1, color = "blue",
+                      position = position_nudge(y = -0.11),
+                     aes(xmin = .lower, xmax = .upper)) +
+  scale_x_continuous(breaks = c(-6, -4, -2, 0, 2, 4, 6), expand = c(0,0)) +
+  coord_cartesian(xlim=c(-6,6), ylim=c(1,3)) +
+  theme_light() +
+  theme(axis.text.y = element_blank()) +
+  labs(x="Mean difference") +
+  ylab(NULL)
+
+p_estimates_overall <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), colour = colour), 
+                   data = res_plot_overall) +
+  geom_text(aes(x = 0, label = weighted_effect), hjust = 0) + 
+  geom_text(aes(x = 1, label = unweighted_effect), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0, 2), ylim=c(1,3))
+
+p_studies_overall <- ggplot(aes(y = relevel(author1, "Pooled Effect", after=Inf), colour = colour), 
+                   data = res_plot_overall) +
+  geom_text(aes(x = 0, label = author1), hjust = 0, fontface = ifelse(res_plot_overall$author1 == "Overall", "bold",
+                                                                      ifelse(res_plot_overall$author1 == "Pooled Effect", "italic","plain"))) +
+  geom_text(aes(x = 1.5, label = n_int2_tot), hjust = 0) +
+  geom_text(aes(x = 2, label = truncal_mean_sd), hjust = 0) +
+  geom_text(aes(x = 3, label = n_int1_tot), hjust = 0) +
+  geom_text(aes(x = 3.5, label = control_mean_sd), hjust = 0) +
+  theme_void() +
+  scale_color_identity() +
+  coord_cartesian(xlim = c(0,4))
+
+
+
+library(patchwork)
+
+## Create a layout that we will pass to the patchwork package to size all our plots
+## The vertical axis needs to be adjusted depending on the number of studies in each subgroup
+layout <- c(
+  area(t = 0, l = 0, b = 16, r = 45),
+  area(t = 0, l = 45, b = 16, r = 65), 
+  area(t = 0, l = 67, b = 16, r = 88),
+  area(t = 17, l = 0, b = 36, r = 45),
+  area(t = 17, l = 45, b = 36, r = 65), 
+  area(t = 17, l = 67, b = 36, r = 88),
+  area(t = 37, l = 0, b = 52, r = 45),
+  area(t = 37, l = 45, b = 52, r = 65), 
+  area(t = 37, l = 67, b = 52, r = 88),
+  area(t = 53, l = 0, b = 61, r = 45),
+  area(t = 53, l = 45, b = 61, r = 65), 
+  area(t = 53, l = 67, b = 61, r = 88),
+  area(t = 62, l = 0, b = 64, r = 45),
+  area(t = 62, l = 45, b = 64, r = 65), 
+  area(t = 62, l = 67, b = 64, r = 88))
+
+
+# Finally, combine all the plots together
+p_studies_control + p_forest_control + p_estimates_control + 
+  p_studies_placebo + p_forest_placebo + p_estimates_placebo + 
+  p_studies_tea + p_forest_tea + p_estimates_tea +
+  p_studies_wound + p_forest_wound + p_estimates_wound +
+  p_studies_overall + p_forest_overall + p_estimates_overall + plot_layout(design = layout)
+
+```
+
+## Excluding Studies at High RoB
+:::
+
+#### Posterior Probability Plots
+
+Below are the posterior probability plots for the primary outcome (the pooled effect of mean difference in dynamic NRS at 24 hours) and for heterogeneity ($\tau$). For $\tau$, there are reference lines representing traditional cutt-offs for heterogeneity: Low ($\tau < 0.1$), Moderate ($0.1 < \tau < 0.5$), Substantial ($0.5 < \tau < 1.0$), and High ($\tau > 1.0$). The priors for $\theta_{i}$ ($\alpha = \operatorname{Normal}(0,1)$) and $\tau$ ( $\tau \sim \operatorname{Half-Cauchy}(0,0.5)$ are also graphed.
+
+```{r}
+
+post.samples <- as_draws_df(brm_overall, c("b_Intercept", "sd_author1__Intercept"))
+
+mu_prior_plot = data.frame(prior = exp(distributional::dist_normal(mean = 0, sd = 0.82)))
+
+mu_df <- brm_overall |> 
+  spread_draws(b_Intercept) |> 
+  median_qi(.width = c(.66, .8, .95))
+
+mu <- ggplot(aes(x = exp(b_Intercept), alpha = 1), data = post.samples) +
+  stat_slab(aes(fill = after_stat(level)),
+                .width = c(.66, .80, .95, 1), position = "dodgejust") +
+  scale_fill_brewer(na.translate = FALSE, name = "Probability") +
+  geom_pointinterval(aes(xmin = exp(.lower), 
+                          xmax = exp(.upper), 
+                          x = exp(b_Intercept)),
+                      data = mu_df, 
+                      col = "black", alpha = 1) +
+  stat_slab(aes(xdist = prior), data = mu_prior_plot, fill = NA, color = "grey",  inherit.aes = FALSE) +
+  scale_x_log10(breaks = c(0.25, 0.5, 1, 2,4), expand = c(0, 0)) + 
+  ggdist::scale_thickness_shared() +
+  coord_cartesian(xlim=c(0.25, 4), ylim = c(0,1)) +
+  geom_vline(xintercept = 1, linetype = "dashed") +
+  annotate("text", x = 0.35, y = 0.8, label = "Favours\nTruncal Block") +
+  annotate("text", x = 2, y = 0.8,  label = "Favours\nControl") +
+  annotate("text", x = 2, y = 0.2, label = "Mean effect prior", fontface = "bold", colour = "grey30", angle=-8) +
+  theme_light() +
+  theme(axis.text.y = element_blank()) +
+  labs(x="Mean Difference", title = "A: Mean effect") +
+  ylab(NULL) +
+  guides(alpha = "none")
+
+tau_prior_plot = data.frame(prior = distributional::dist_cauchy(location = 0, scale = 0.5))
+
+tau <- ggplot(aes(x = sd_author1__Intercept, alpha = 1), data = post.samples) +
+  stat_slab(aes(fill = after_stat(level)),
+                .width = c(.66, .80, .95,  1), position = "dodgejust") +
+  stat_pointinterval(.width = c(.66, .8, .95), alpha = 1) +
+  stat_slab(aes(xdist = prior), 
+                data = tau_prior_plot, fill = NA, color = "grey", inherit.aes = FALSE) +
+  ggdist::scale_thickness_shared() +
+  scale_fill_brewer(na.translate = FALSE, name = "Probability") +
+  geom_vline(xintercept = 0.1, linetype = "dashed") +
+  geom_vline(xintercept = 0.5, linetype = "dashed") +
+  geom_vline(xintercept = 1, linetype = "dashed") +
+  annotate("text", x = 0.05, y = 0.98, label = "Low", fontface = "bold") +
+  annotate("text", x = 0.3, y = 0.98, label = "Reasonable", fontface = "bold") +
+  annotate("text", x = 0.75, y = 0.98, label = "Fairly high", fontface = "bold") +
+  annotate("text", x = 1.1, y = 0.98, label = "Fairly extreme", fontface = "bold") +
+  annotate("text", x = 1, y = 0.1, label = "Heterogeneity prior", fontface = "bold", colour = "grey30", angle = -2) +
+  scale_x_continuous(breaks = c(0, 0.1, 0.25, 0.5, 0.75, 1, 1.2), expand = c(0, 0)) +           
+  coord_cartesian(xlim=c(0, 1.2), ylim = c(0,1)) +
+  theme_light() +
+  theme(axis.text.y = element_blank()) +
+  labs(x="Log odds ratio", title = "B: Heterogeneity") +
+  ylab(NULL) +
+  guides(alpha = "none")
+
+gridExtra::grid.arrange(mu, tau, ncol = 1)
+```
+
+
+#### Bivariate Posterior Probability Plot
+
+Compared to a univariate outcome, a multivariate (or bivariate in this case) is advantageous when the outcomes are correlated. In pain studies, a benefit in pain may not be obvious, particularly when alternate analgesia is given (ie no difference in pain scores, but an increase in opioid consumption). Hence, we are interested in modelling the bivariate outcome of dynamic pain scores and opioid consumption. Fitting a Bayesian model allows us to generate conditional probabilities where we may determine:
+
+-   Probability of reduction in pain scores AND a reduction in opioid consumption
+
+-   Probability of reduction in pain scores AND an increase in opioid consumption
+
+-   Probability of an increase in pain scores AND a reduction in opioid consumption
+
+-   Probability of an increase in pain scores AND an increase in opioid consumption.
+
+**The Likelihood**
+
+The bivariate likelihood is more complex compared to that of the univariate outcome.
+
+$$
+\begin{pmatrix} Y_{i1} \\ Y_{i2} \end{pmatrix} \sim Normal\biggl\{\begin{pmatrix} \theta_{i1} \\ \theta_{i2} \end{pmatrix}, S_i \biggr\} \tag{Likelihood} \\
+S_i=\begin{pmatrix} s^2_{i1} & \rho_{W_{i}}s_{i1}s_{i2}\\ \rho_{W_{i}}s_{i1}s_{i2} & s^2_{i2} \end{pmatrix}\\
+\begin{pmatrix} \theta_{i1} \\ \theta_{i2}  \end{pmatrix} \sim Normal\biggl\{\begin{pmatrix} \beta_{1} \\ \beta_{2} \end{pmatrix}, D \biggr\} \\
+D=\begin{pmatrix} \tau^2_{1} & \rho_{B}\tau_{1}\tau_{2}\\ \rho_{B}\tau_{1}\tau_{2} & \tau^2_{2} \end{pmatrix}\\
+$$
+
+where $Y_{i1}$ and $Y_{i2}$ are the estimated effects of the underlying true effects (denoted $\theta_{i1}$ and $\theta_{i2}$) , with $s_{i1}$ and $s_{i2}$ their associated standard errors. The within-study variance-covariance matrix is given by $S_{i}$, is and $D$ is the between study covariance matrix. For a bivariate outcome of mean difference in pain and mean difference in opioid consumption, we assumed a within-study correlation of $\rho = 0.5$.
+
+**Priors**
+
+Within a Bayesian framework, the above likelihood is combined with priors of the unknown parameters $B_{j}$ (the pooled effect of each outcome, including $B_{1}$ & $B_{2}$), $\tau^2_{j}$ (between-study variance) and $\rho_{B}$ (between study correlation).
+
+**Prior for Mean Difference in Dynamic Pain Scores**
+
+**Prior for Mean Difference in Opioid Consumption**
+
+Like the prior for the mean difference in pain scores, the mean difference in opioid consumption
+
+**Prior for** $\tau_{j}$ **(Between-Study Variance)**
+
+**Prior for** $\rho_{B}$ **(Between-Study Correlation)**
+
+**Sensitivity Analysis with Different Priors**
+
+NOTE- have graph table with the different priors for each tab (eg informative, vague, Turner et al)
+
+```{r, include=FALSE}
+# Bivariate Outcome for Dynamic Pain and OME at 24 Hours
+# Bind Pain and OME dataframes together
+pain_ome_24h <- rbind(dynamic_nrs_24, ome_24)
+
+# Construct a variance-covariance matrix assuming within-study correlation = 0.5
+V <- metafor::vcalc(vi, cluster=author1, type=outcome, rho=0.5, data= pain_ome_24h)
+
+# Specify formula
+mf <-  brms::bf(yi ~ 0 + outcome + (0 + outcome|author1) + fcor(V))
+
+get_prior(mf, 
+          data = pain_ome_24h,
+          data2 = list(V = V),
+          family = gaussian)
+
+# Create priors
+priors_bv =  
+  prior(normal(0, 4), class = "b", coef = "outcomeome") +
+  prior(normal(0, 4), class = "b", coef = "outcomepain") +
+  prior(cauchy(0, 4), class = "sd", coef = "outcomepain", group = "author1") +
+  prior(cauchy(0, 4), class = "sd", coef = "outcomeome", group = "author1") +
+  prior(lkj(2), class = cor) +
+  prior(constant(1), class = "sigma")
+
+# Run the analysis
+brm_pain_ome_24_bv <- brms::brm(
+  formula = mf,
+  prior = priors_bv,
+  data = pain_ome_24h,
+  data2 = list(V = V),
+  family = gaussian,
+  warmup = 2000, 
+  iter = 4000,
+  chains = 4,
+  cores = parallel::detectCores(),
+  control = list(adapt_delta = 0.99),
+  backend = "cmdstanr",
+  seed = 123)
+
+#Extract medians and 95% HDIs for means/SDs for each outcome & tabulate
+parameters <- 
+  brm_pain_ome_24_bv |> 
+  tidy_draws() |> 
+  reframe("ATE: Pain" = b_outcomepain,
+          "ATE: Opioid Use" = b_outcomeome,
+            
+          "Tau: Pain" = sd_author1__outcomepain,
+          "Tau: Opioid Use" = sd_author1__outcomeome,
+            
+          "Correlation" = cor_author1__outcomeome__outcomepain) |> 
+  pivot_longer(everything()) |> 
+  group_by(name) |> 
+  median_hdi(value) |> 
+  mutate(across(value:.upper, ~round(., 2))) |> 
+  select(-c(.width:.interval))
+
+# Tabulate the above data
+pain_ome_24h_bv_parameters <- parameters |> 
+  filter(str_detect(name, "ATE")) |> 
+  mutate(across(-name, ~round(., 2))) |> 
+  reframe(Parameter = name, 
+          "Median [95% CrI]" = str_c(value, " [", .lower, ", ", .upper, "]")) |> 
+  rbind(
+    parameters |> 
+    filter(str_detect(name, "ATE", negate = T)) |> 
+    reframe(Parameter = name, 
+            "Median [95% CrI]" = str_c(value, " [", .lower, ", ", .upper, "]"))
+  ) |> 
+  gt()
+
+# Bivariate Plot
+pain_ome_bvplot <- brm_pain_ome_24_bv |> 
+  tidybayes::tidy_draws() |> 
+  ggplot() +
+  aes(x = b_outcomepain, y = b_outcomeome) +
+  ggdensity::geom_hdr(
+    probs = c(0.95, 0.8, 0.5),
+    aes(fill = after_stat(probs)), 
+    alpha = 1
+  ) +
+  scale_fill_manual(values = c("pink", "red", "darkred")) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  scale_x_continuous(breaks = c(-1.5, -1, -0.5, 0, 0.5)) +
+  scale_y_continuous(breaks = c(-12, -8, -4, 0, 4, 8)) +
+  coord_cartesian(xlim=c(-1.2,0.5), ylim=c(-13,8)) +
+  labs(x = "Mean difference in pain (dynamic NRS)",
+       y = "Mean difference in opioid use (oral morphine equivalents)") +
+  geom_text(aes(x = 0.1, y = 4, label = "Favours\ncontrol"), hjust = 0) +
+  geom_text(aes(x = -1.2, y = -11, label = "Favours\ntruncal block"), hjust = 0) +
+  ggdist::theme_ggdist()
+
+# Probabilities
+prob_tbl <- brm_pain_ome_24_bv |> 
+  tidybayes::tidy_draws() |> 
+  reframe(q1 = mean(b_outcomepain < 0 & b_outcomeome < 0),
+          q2 = mean(b_outcomepain < 0 & b_outcomeome > 0),
+          q3 = mean(b_outcomepain > 0 & b_outcomeome < 0),
+          q4 = mean(b_outcomepain > 0 & b_outcomeome > 0)) |> 
+  mutate(across(everything(), ~round(., 2))) |> 
+  mutate("Pain MD < 0 & Opioid MD < 0" = q1,
+           "Pain MD < 0 & Opioid MD > 0" = q2,
+           "Pain MD > 0 & Opioid MD < 0" = q3,
+           "Pain MD > 0 & Opioid MD > 0" = q4) |> 
+  select(-c(q1, q2, q3, q4)) |> 
+  pivot_longer(everything()) |> 
+  rename(c("Outcome" = name,
+           Probability = value)) |> 
+  gt() |> 
+  tab_header(title = "Bivariate Outcome of Dynamic Pain & Opioid Use at 24 Hours") |> 
+  tab_footnote(footnote = "Pain MD = Mean Difference in Dynamic Numerical Pain Scale") |> 
+  tab_footnote(footnote = "Opioid MD = Mean Difference in Oral Morphine Equivalents")
+```
+
+```{r}
+pain_ome_bvplot
+
+prob_tbl
+```
+
+#### Sensitivity Analysis Using Other Priors
+
+## Secondary Outcomes
+
+#### Dynamic Pain at 48 and 72 Hours
+
+#### Opioid Consumption at 24, 48 and 72 Hours
+
+#### Bivariate Posterior Probability Plots
+
+#### Surgical Outcomes, Procedural Morbidity and Opioid Side-Effects
+
+```{r}
+
+# Select Surgical Outcome Data
+surg_outcomes <- truncal2 |>  
+  select(author, intervention_type_intervention_1:intervention_type_intervention_2, first_bowel_int1:ileus_int2)
+
+# Create Table of Surgical Outcomes
+surg_outcomes_cont <- surg_outcomes |>  
+  select(hosp_los_int1, first_bs_int1, time_ambulation_int1, ileus_int1) |>  
+  rename("Hospital LOS" = hosp_los_int1,
+         "Time to First Bowel Sounds (Hrs)" = first_bs_int1,
+         "Time to Ambulation (Hrs)" = time_ambulation_int1,
+         "Ileus" = ileus_int1) |>  
+  mutate_all(as.numeric) |>  
+  mutate(Intervention = "Control")
+
+surg_outcomes_int <- surg_outcomes |>  
+  select(hosp_los_int2, first_bs_int2, time_ambulation_int2, ileus_int2) |>  
+  rename("Hospital LOS" = hosp_los_int2,
+         "Time to First Bowel Sounds (Hrs)" = first_bs_int2,
+         "Time to Ambulation (Hrs)" = time_ambulation_int2,
+         "Ileus" = ileus_int2) |>  
+  mutate_all(as.numeric) |>  
+  mutate(Intervention = "Truncal Block")
+
+surg_outcomes_total <- rbind(surg_outcomes_cont, surg_outcomes_int)
+
+table_surg_outcome <- surg_outcomes_total |>  
+  select("Hospital LOS":"Intervention") |>  
+  tbl_summary(by = "Intervention", missing = "no",
+              type = everything() ~ "continuous") |>  
+  modify_spanning_header(starts_with("stat_") ~ "**Intervention**")
+
+# Select Procedure Morbidity Data
+procedure_morb <- truncal2|> 
+  select(author, intervention_type_intervention_1:intervention_type_intervention_2, procedure_compl_int1, procedure_compl_int2, block_failure_int1, block_failure_int2)
+
+# Create Table of Procedural Morbidity
+proc_morb_cont <- procedure_morb|>
+  select(procedure_compl_int1, block_failure_int1)|>
+  rename("Procedural Complication" = procedure_compl_int1,
+         "Block Failure" = block_failure_int1)|>
+  mutate_all(as.numeric)|>
+  mutate(Intervention = "Control")
+
+proc_morb_int <- procedure_morb|>
+  select(procedure_compl_int2, block_failure_int2)|>
+  rename("Procedural Complication" = procedure_compl_int2,
+         "Block Failure" = block_failure_int2)|>
+  mutate_all(as.numeric)|>
+  mutate(Intervention = "Truncal Block")
+
+proc_morb_total <- rbind(proc_morb_cont, proc_morb_int)
+
+table_proc_morb <- proc_morb_total|>
+  select("Procedural Complication":"Intervention")|>
+  tbl_summary(by = "Intervention", missing = "no",
+              type = everything() ~ "continuous")|>
+  modify_spanning_header(starts_with("stat_") ~ "**Intervention**")
+
+# Select Opioid Side Effect Data
+opioid_se <- truncal2|>
+  select(author, intervention_type_intervention_1:intervention_type_intervention_2, sedation_int1:pruritis_int1, sedation_int2:pruritis_int2, -c(procedure_compl_int1, procedure_compl_int2))
+
+# Create Table of Opioid Side Effects
+
+opioid_se_cont <- opioid_se|>
+  select(sedation_int1:pruritis_int1)|>
+  rename("Sedation" = sedation_int1,
+         "Nausea & Vomiting" = nv_int1,
+         "Hypotension" = hypotension_int1,
+         "Pruritis" = pruritis_int1)|>
+  mutate_all(as.numeric)|>
+  mutate(Intervention = "Control")
+
+opioid_se_int <- opioid_se|>
+  select(sedation_int2:pruritis_int2)|>
+  rename("Sedation" = sedation_int2,
+         "Nausea & Vomiting" = nv_int2,
+         "Hypotension" = hypotension_int2,
+         "Pruritis" = pruritis_int2)|>
+  mutate_all(as.numeric)|>
+  mutate(Intervention = "Truncal Block")
+
+opioid_se_total <- rbind(opioid_se_cont, opioid_se_int)
+
+table_opioid_se <- opioid_se_total|>
+  select("Sedation":"Intervention")|>
+  tbl_summary(by = "Intervention", missing = "no",
+              type = everything() ~ "continuous")|>
+  modify_spanning_header(starts_with("stat_") ~ "**Intervention**")
+
+# Merge Secondary Outcomes Tables
+sec_outcomes <- tbl_stack(list(table_surg_outcome, table_proc_morb, table_opioid_se),
+                          group_header = c("Surgical Outcomes", "Procedural Morbidity", "Opioid Side Effects")) 
+
+sec_outcomes
+```
+
+## Subgroup Analyses
+
+#### Single Shot Truncal Blocks
+
+#### Placebo Continuous Infusions
+
+#### Thoracic Epidural
+
+#### Wound Infusion
+
+## Metaregression
+
+## Bayesian Sequential Analysis
+
+## Assessment of Small Sample Bias (Including Publication Bias)
+
+#### Bayesian Regression Test
+
+#### Bayesian Model Averaging
+
+#### Summary Table
+
+#### Posterior Distribution Plots to Visualise the Effect of Small Study Bias
+
+## Interpretation
+
+## References
