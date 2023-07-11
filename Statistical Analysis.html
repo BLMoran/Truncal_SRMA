@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Dr Benjamin Moran">
-<meta name="dcterms.date" content="2023-07-04">
+<meta name="dcterms.date" content="2023-07-11">
 
 <title>Truncal Analgesia for Midline Laparotomy</title>
 <style>
@@ -51,20 +51,22 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
   <li><a href="#the-meta-analysis-model" id="toc-the-meta-analysis-model" class="nav-link" data-scroll-target="#the-meta-analysis-model"><span class="header-section-number">2</span> The Meta Analysis Model</a></li>
-  <li><a href="#choice-of-prior" id="toc-choice-of-prior" class="nav-link" data-scroll-target="#choice-of-prior"><span class="header-section-number">3</span> Choice of Prior</a>
+  <li><a href="#choice-of-priors" id="toc-choice-of-priors" class="nav-link" data-scroll-target="#choice-of-priors"><span class="header-section-number">3</span> Choice of Priors</a>
   <ul>
-  <li><a href="#prior-for-mean-difference" id="toc-prior-for-mean-difference" class="nav-link" data-scroll-target="#prior-for-mean-difference"><span class="header-section-number">3.0.1</span> Prior for Mean Difference</a></li>
+  <li><a href="#prior-for-mean-difference-in-numerical-rating-scale-nrs" id="toc-prior-for-mean-difference-in-numerical-rating-scale-nrs" class="nav-link" data-scroll-target="#prior-for-mean-difference-in-numerical-rating-scale-nrs"><span class="header-section-number">3.0.1</span> Prior for Mean Difference in Numerical Rating Scale (NRS)</a></li>
   <li><a href="#prior-for-the-variance" id="toc-prior-for-the-variance" class="nav-link" data-scroll-target="#prior-for-the-variance"><span class="header-section-number">3.0.2</span> Prior for the Variance</a></li>
   </ul></li>
-  <li><a href="#primary-outcome" id="toc-primary-outcome" class="nav-link" data-scroll-target="#primary-outcome"><span class="header-section-number">4</span> Primary Outcome</a>
+  <li><a href="#primary-outcome--dynamic-pain-at-24-hours" id="toc-primary-outcome--dynamic-pain-at-24-hours" class="nav-link" data-scroll-target="#primary-outcome--dynamic-pain-at-24-hours"><span class="header-section-number">4</span> Primary Outcome- Dynamic Pain at 24 Hours</a>
   <ul>
-  <li><a href="#dynamic-pain-at-24-hours" id="toc-dynamic-pain-at-24-hours" class="nav-link" data-scroll-target="#dynamic-pain-at-24-hours"><span class="header-section-number">4.1</span> Dynamic Pain at 24 Hours</a>
+  <li><a href="#posterior-probability-plots" id="toc-posterior-probability-plots" class="nav-link" data-scroll-target="#posterior-probability-plots"><span class="header-section-number">4.1</span> Posterior Probability Plots</a></li>
+  <li><a href="#forest-plot" id="toc-forest-plot" class="nav-link" data-scroll-target="#forest-plot"><span class="header-section-number">4.2</span> Forest Plot</a></li>
+  <li><a href="#bivariate-posterior-probability-plot" id="toc-bivariate-posterior-probability-plot" class="nav-link" data-scroll-target="#bivariate-posterior-probability-plot"><span class="header-section-number">4.3</span> Bivariate Posterior Probability Plot</a>
   <ul class="collapse">
-  <li><a href="#forest-plot" id="toc-forest-plot" class="nav-link" data-scroll-target="#forest-plot"><span class="header-section-number">4.1.1</span> Forest Plot</a></li>
-  <li><a href="#posterior-probability-plots" id="toc-posterior-probability-plots" class="nav-link" data-scroll-target="#posterior-probability-plots"><span class="header-section-number">4.1.2</span> Posterior Probability Plots</a></li>
-  <li><a href="#bivariate-posterior-probability-plot" id="toc-bivariate-posterior-probability-plot" class="nav-link" data-scroll-target="#bivariate-posterior-probability-plot"><span class="header-section-number">4.1.3</span> Bivariate Posterior Probability Plot</a></li>
-  <li><a href="#sensitivity-analysis-using-other-priors" id="toc-sensitivity-analysis-using-other-priors" class="nav-link" data-scroll-target="#sensitivity-analysis-using-other-priors"><span class="header-section-number">4.1.4</span> Sensitivity Analysis Using Other Priors</a></li>
+  <li><a href="#the-likelihood" id="toc-the-likelihood" class="nav-link" data-scroll-target="#the-likelihood"><span class="header-section-number">4.3.1</span> The Likelihood</a></li>
+  <li><a href="#priors" id="toc-priors" class="nav-link" data-scroll-target="#priors"><span class="header-section-number">4.3.2</span> Priors</a></li>
+  <li><a href="#sensitivity-analysis-with-different-priors" id="toc-sensitivity-analysis-with-different-priors" class="nav-link" data-scroll-target="#sensitivity-analysis-with-different-priors"><span class="header-section-number">4.3.3</span> Sensitivity Analysis with Different Priors</a></li>
   </ul></li>
+  <li><a href="#sensitivity-analysis-with-different-priors-1" id="toc-sensitivity-analysis-with-different-priors-1" class="nav-link" data-scroll-target="#sensitivity-analysis-with-different-priors-1"><span class="header-section-number">4.4</span> Sensitivity Analysis with Different Priors</a></li>
   </ul></li>
   <li><a href="#secondary-outcomes" id="toc-secondary-outcomes" class="nav-link" data-scroll-target="#secondary-outcomes"><span class="header-section-number">5</span> Secondary Outcomes</a>
   <ul>
@@ -79,8 +81,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#placebo-continuous-infusions" id="toc-placebo-continuous-infusions" class="nav-link" data-scroll-target="#placebo-continuous-infusions"><span class="header-section-number">6.0.2</span> Placebo Continuous Infusions</a></li>
   <li><a href="#thoracic-epidural" id="toc-thoracic-epidural" class="nav-link" data-scroll-target="#thoracic-epidural"><span class="header-section-number">6.0.3</span> Thoracic Epidural</a></li>
   <li><a href="#wound-infusion" id="toc-wound-infusion" class="nav-link" data-scroll-target="#wound-infusion"><span class="header-section-number">6.0.4</span> Wound Infusion</a></li>
+  <li><a href="#block-type" id="toc-block-type" class="nav-link" data-scroll-target="#block-type"><span class="header-section-number">6.0.5</span> Block Type</a></li>
   </ul></li>
-  <li><a href="#metaregression" id="toc-metaregression" class="nav-link" data-scroll-target="#metaregression"><span class="header-section-number">7</span> Metaregression</a></li>
+  <li><a href="#metaregression" id="toc-metaregression" class="nav-link" data-scroll-target="#metaregression"><span class="header-section-number">7</span> Metaregression</a>
+  <ul>
+  <li><a href="#variables-for-inclusion-in-the-metaregression-model" id="toc-variables-for-inclusion-in-the-metaregression-model" class="nav-link" data-scroll-target="#variables-for-inclusion-in-the-metaregression-model"><span class="header-section-number">7.0.1</span> Variables for Inclusion in the Metaregression Model</a></li>
+  <li><a href="#priors-for-the-metaregression-model" id="toc-priors-for-the-metaregression-model" class="nav-link" data-scroll-target="#priors-for-the-metaregression-model"><span class="header-section-number">7.0.2</span> Priors for the Metaregression Model</a></li>
+  <li><a href="#the-meta-regression-model" id="toc-the-meta-regression-model" class="nav-link" data-scroll-target="#the-meta-regression-model"><span class="header-section-number">7.0.3</span> The Meta-Regression Model</a></li>
+  </ul></li>
   <li><a href="#bayesian-sequential-analysis" id="toc-bayesian-sequential-analysis" class="nav-link" data-scroll-target="#bayesian-sequential-analysis"><span class="header-section-number">8</span> Bayesian Sequential Analysis</a></li>
   <li><a href="#assessment-of-small-sample-bias-including-publication-bias" id="toc-assessment-of-small-sample-bias-including-publication-bias" class="nav-link" data-scroll-target="#assessment-of-small-sample-bias-including-publication-bias"><span class="header-section-number">9</span> Assessment of Small Sample Bias (Including Publication Bias)</a>
   <ul>
@@ -118,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 4, 2023</p>
+      <p class="date">July 11, 2023</p>
     </div>
   </div>
   
@@ -145,13 +153,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 \tau &amp; \sim \operatorname{Half-Cauchy}(0, 0.5) \\
 \end{align*}
 \]</span></p>
-<p>where <span class="math inline">\(y_i\)</span> is the observed mean difference in the dynamic numerical rating scale (NRS) of truncal blocks versus non-truncal regional analgesia for midline laparotomy, and <span class="math inline">\(\sigma_i^2\)</span> is the known sampling variance in the study <span class="math inline">\(i\)</span>. Each study, <span class="math inline">\(i\)</span> has it’s own distribution with a mean effect, <span class="math inline">\(\theta_i\)</span>. <span class="math inline">\(\theta_i\)</span> is from a normal distribution with a mean effect <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\tau^2\)</span> (which represents the between-study heterogeneity). The mean effect, <span class="math inline">\(\mu\)</span>, is predicted by a linear regression, where each subgroup <span class="math inline">\(k\)</span> (Control, Placebo, Thoracic Epidural, Wound Catheter) has it’s own mean effect, given by <span class="math inline">\(\alpha\)</span>.</p>
+<p>where <span class="math inline">\(y_i\)</span> is the observed mean difference in the dynamic numerical rating scale (NRS) of truncal blocks versus non-truncal regional analgesia for midline laparotomy, and <span class="math inline">\(\sigma_i^2\)</span> is the known sampling variance in the study <span class="math inline">\(i\)</span>. Each study, <span class="math inline">\(i\)</span> has it’s own distribution with a mean effect, <span class="math inline">\(\theta_i\)</span>. <span class="math inline">\(\theta_i\)</span> is from a normal distribution with a mean effect <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\tau^2\)</span> (which represents the between-study heterogeneity). The mean effect, <span class="math inline">\(\mu\)</span>, is predicted by a linear regression, where each subgroup <span class="math inline">\(k\)</span> (Control, Placebo, Thoracic Epidural, Wound Catheter) has it’s own mean effect, given by <span class="math inline">\(\alpha\)</span>. It should be noted that <span class="math inline">\(\alpha_{subgroup[k]}\)</span> is the intercept in the model.</p>
+<p>Within a Bayesian framework, the above likelihood is combined with priors of the unknown parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\tau\)</span>.</p>
 </section>
-<section id="choice-of-prior" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="choice-of-prior"><span class="header-section-number">3</span> Choice of Prior</h2>
-<section id="prior-for-mean-difference" class="level4" data-number="3.0.1">
-<h4 data-number="3.0.1" class="anchored" data-anchor-id="prior-for-mean-difference"><span class="header-section-number">3.0.1</span> Prior for Mean Difference</h4>
-<p>The mean difference in interventional pain studies can potentially have no effect (mean difference = 0), or can result in total resolution of pain (mean difference = 10). It is unlikley that a pain intervention will result in improvement in NRS more than 5/10. However, it should also be noted that if a pain intervention has no effect on acute pain, a pain score may increase due to continued or worsening nociception, resulting in a positive mean difference. Again,this is unlikely to result in a mean difference of -10, and is less likely to exceed -5. Hence, we will use a weakly informative prior for <span class="math inline">\(\alpha\)</span>, ie <span class="math inline">\(Normal(0,1)\)</span>.</p>
+<section id="choice-of-priors" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="choice-of-priors"><span class="header-section-number">3</span> Choice of Priors</h2>
+<section id="prior-for-mean-difference-in-numerical-rating-scale-nrs" class="level4" data-number="3.0.1">
+<h4 data-number="3.0.1" class="anchored" data-anchor-id="prior-for-mean-difference-in-numerical-rating-scale-nrs"><span class="header-section-number">3.0.1</span> Prior for Mean Difference in Numerical Rating Scale (NRS)</h4>
+<p>The numerical rating scale (NRS) is an 11-point ordinal scale that has bounds at [0,10]. Despite this, a large majority of pain studies report the mean and standard deviation in the effect estimates of the intervention. Hence, it was not possible to convert the effects to median with interquartile range, and a decision was made to convert all values to mean and standard deviation. For this reason, the mean difference was the effect measure chosen for this meta analysis.</p>
+<p>The mean difference in interventional pain studies can potentially have no effect (mean difference = 0), or can result in total resolution of pain (mean difference = 10). It is unlikley that a pain intervention will result in improvement in NRS more than 5/10. However, it should also be noted that if a pain intervention has no effect on acute pain, a pain score may increase due to continued or worsening nociception, resulting in a positive mean difference. Again,this is unlikely to result in a mean difference of -10, and is less likely to exceed -5. Hence, we will use a weakly informative prior for <span class="math inline">\(\alpha\)</span>, ie <span class="math inline">\(Normal(0,1)\)</span>, which will cover the parameter space for the mean differences.</p>
 <p>This gives:</p>
 <p><span class="math display">\[\begin{align*}
 \alpha &amp; \sim \operatorname{Normal}(0, 1) \
@@ -166,22 +176,35 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 \end{align*}\]</span></p>
 </section>
 </section>
-<section id="primary-outcome" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="primary-outcome"><span class="header-section-number">4</span> Primary Outcome</h2>
-<section id="dynamic-pain-at-24-hours" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="dynamic-pain-at-24-hours"><span class="header-section-number">4.1</span> Dynamic Pain at 24 Hours</h3>
-<section id="forest-plot" class="level4" data-number="4.1.1">
-<h4 data-number="4.1.1" class="anchored" data-anchor-id="forest-plot"><span class="header-section-number">4.1.1</span> Forest Plot</h4>
+<section id="primary-outcome--dynamic-pain-at-24-hours" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="primary-outcome--dynamic-pain-at-24-hours"><span class="header-section-number">4</span> Primary Outcome- Dynamic Pain at 24 Hours</h2>
+<p>The primary outcome for this meta analysis is dynamic pain at 24 hours. This was chosen because dynamic pain is a more reliable outcome compared with static pain. Alternatively, functional pain scores are a useful outcome measure, however, there were no studies with this as an outcome.</p>
+<section id="posterior-probability-plots" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="posterior-probability-plots"><span class="header-section-number">4.1</span> Posterior Probability Plots</h3>
+<p>Below are the posterior probability plots for the primary outcome (the pooled effect of mean difference in dynamic NRS at 24 hours) and for heterogeneity (<span class="math inline">\(\tau\)</span>). For <span class="math inline">\(\tau\)</span>, there are reference lines representing traditional cutt-offs for heterogeneity: Low (<span class="math inline">\(\tau &lt; 0.1\)</span>), Moderate (<span class="math inline">\(0.1 &lt; \tau &lt; 0.5\)</span>), High (<span class="math inline">\(0.5 &lt; \tau &lt; 1.0\)</span>), and Very High (<span class="math inline">\(\tau &gt; 1.0\)</span>). The priors for <span class="math inline">\(\theta_{i}\)</span> (<span class="math inline">\(\alpha = \operatorname{Normal}(0,1)\)</span>) and <span class="math inline">\(\tau\)</span> ( <span class="math inline">\(\tau \sim \operatorname{Half-Cauchy}(0,0.5)\)</span> are also graphed.</p>
+<div class="cell" data-hash="Statistical-Analysis_cache/html/fig-posteriors-all_992b9572caf362204a4f7bf3b73dbd2c">
+<div class="cell-output-display">
+<div id="fig-posteriors-all" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Statistical-Analysis_files/figure-html/fig-posteriors-all-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Posteriors of A) mean effect and B) heterogeneity across all studies.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="forest-plot" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="forest-plot"><span class="header-section-number">4.2</span> Forest Plot</h3>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">All Studies</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Excluding Studies at High RoB</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell" data-hash="Statistical-Analysis_cache/html/fig-forest-all-studies_76cc5578f48972647d2146b2a941899f">
+<div class="cell" data-hash="Statistical-Analysis_cache/html/fig-forest-all-studies_c6b93f985a9a778166528e894107dd32">
 <div class="cell-output-display">
 <div id="fig-forest-all-studies" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="Statistical-Analysis_files/figure-html/fig-forest-all-studies-1.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Forest plot of all studies.</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;2: Forest plot of all studies.</figcaption>
 </figure>
 </div>
 </div>
@@ -193,11 +216,8 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 </div>
 </div>
 </section>
-<section id="posterior-probability-plots" class="level4" data-number="4.1.2">
-<h4 data-number="4.1.2" class="anchored" data-anchor-id="posterior-probability-plots"><span class="header-section-number">4.1.2</span> Posterior Probability Plots</h4>
-</section>
-<section id="bivariate-posterior-probability-plot" class="level4" data-number="4.1.3">
-<h4 data-number="4.1.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plot"><span class="header-section-number">4.1.3</span> Bivariate Posterior Probability Plot</h4>
+<section id="bivariate-posterior-probability-plot" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plot"><span class="header-section-number">4.3</span> Bivariate Posterior Probability Plot</h3>
 <p>Compared to a univariate outcome, a multivariate (or bivariate in this case) is advantageous when the outcomes are correlated. In pain studies, a benefit in pain may not be obvious, particularly when alternate analgesia is given (ie no difference in pain scores, but an increase in opioid consumption). Hence, we are interested in modelling the bivariate outcome of dynamic pain scores and opioid consumption. Fitting a Bayesian model allows us to generate conditional probabilities where we may determine:</p>
 <ul>
 <li><p>Probability of reduction in pain scores AND a reduction in opioid consumption</p></li>
@@ -205,32 +225,65 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 <li><p>Probability of an increase in pain scores AND a reduction in opioid consumption</p></li>
 <li><p>Probability of an increase in pain scores AND an increase in opioid consumption.</p></li>
 </ul>
-<p><strong>The Likelihood</strong></p>
+<section id="the-likelihood" class="level4" data-number="4.3.1">
+<h4 data-number="4.3.1" class="anchored" data-anchor-id="the-likelihood"><span class="header-section-number">4.3.1</span> The Likelihood</h4>
 <p>The bivariate likelihood is more complex compared to that of the univariate outcome.</p>
-<p><strong>Priors</strong></p>
-<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-3_4111dbd47f3d4ee26a2a07562ceca45e">
+<p><span class="math display">\[
+\begin{align*}
+\begin{pmatrix} Y_{i1} \\ Y_{i2} \end{pmatrix} \sim Normal\biggl\{\begin{pmatrix} \theta_{i1} \\ \theta_{i2} \end{pmatrix}, S_i \biggr\} \tag{Likelihood} \\
+\\
+S_i=\begin{pmatrix} s^2_{i1} &amp; \rho_{W_{i}}s_{i1}s_{i2}\\ \rho_{W_{i}}s_{i1}s_{i2} &amp; s^2_{i2} \end{pmatrix}\\
+\\
+\begin{pmatrix} \theta_{i1} \\ \theta_{i2}  \end{pmatrix} \sim Normal\biggl\{\begin{pmatrix} \beta_{1} \\ \beta_{2} \end{pmatrix}, D \biggr\} \\
+\\
+D=\begin{pmatrix} \tau^2_{1} &amp; \rho_{B}\tau_{1}\tau_{2}\\ \rho_{B}\tau_{1}\tau_{2} &amp; \tau^2_{2} \end{pmatrix}\\
+\end{align*}
+\]</span></p>
+<p>where <span class="math inline">\(Y_{i1}\)</span> and <span class="math inline">\(Y_{i2}\)</span> are the estimated effects of the underlying true effects (denoted <span class="math inline">\(\theta_{i1}\)</span> and <span class="math inline">\(\theta_{i2}\)</span>) , with <span class="math inline">\(s_{i1}\)</span> and <span class="math inline">\(s_{i2}\)</span> their associated standard errors. The within-study variance-covariance matrix is given by <span class="math inline">\(S_{i}\)</span>, is and <span class="math inline">\(D\)</span> is the between study covariance matrix. For a bivariate outcome of mean difference in pain and mean difference in opioid consumption, we assumed a within-study correlation of <span class="math inline">\(\rho = 0.5\)</span>.</p>
+</section>
+<section id="priors" class="level4" data-number="4.3.2">
+<h4 data-number="4.3.2" class="anchored" data-anchor-id="priors"><span class="header-section-number">4.3.2</span> Priors</h4>
+<p>Within a Bayesian framework, the above likelihood is combined with priors of the unknown parameters <span class="math inline">\(B_{j}\)</span> (the pooled effect of each outcome, including <span class="math inline">\(B_{1}\)</span> &amp; <span class="math inline">\(B_{2}\)</span>), <span class="math inline">\(\tau^2_{j}\)</span> (between-study variance) and <span class="math inline">\(\rho_{B}\)</span> (between study correlation).</p>
+<p><strong>Prior for Mean Difference in Dynamic Pain Scores</strong></p>
+<p><strong>Prior for Mean Difference in Opioid Consumption</strong></p>
+<p>Like the prior for the mean difference in pain scores, the mean difference in opioid consumption</p>
+<p><strong>Prior for</strong> <span class="math inline">\(\tau_{j}\)</span> <strong>(Between-Study Variance)</strong></p>
+<p><strong>Prior for</strong> <span class="math inline">\(\rho_{B}\)</span> <strong>(Between-Study Correlation)</strong></p>
+</section>
+<section id="sensitivity-analysis-with-different-priors" class="level4" data-number="4.3.3">
+<h4 data-number="4.3.3" class="anchored" data-anchor-id="sensitivity-analysis-with-different-priors"><span class="header-section-number">4.3.3</span> Sensitivity Analysis with Different Priors</h4>
+<p>NOTE- have graph table with the different priors for each tab (eg informative, vague, Turner et al)</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Bivariate Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Probabilities</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-4_0ddb5ae551aeb1b5c15b7a73a2e07de6">
 <div class="cell-output-display">
-<p><img src="Statistical-Analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" style="width:90.0%"></p>
+<p><img src="Statistical-Analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" style="width:90.0%"></p>
 </div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-5_9707a6d2bbc18400bf6803d4faaba02c">
 <div class="cell-output-display">
 
-<div id="cryjixximy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cryjixximy table {
+<div id="gjsyrqzzmc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gjsyrqzzmc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cryjixximy thead, #cryjixximy tbody, #cryjixximy tfoot, #cryjixximy tr, #cryjixximy td, #cryjixximy th {
+#gjsyrqzzmc thead, #gjsyrqzzmc tbody, #gjsyrqzzmc tfoot, #gjsyrqzzmc tr, #gjsyrqzzmc td, #gjsyrqzzmc th {
   border-style: none;
 }
 
-#cryjixximy p {
+#gjsyrqzzmc p {
   margin: 0;
   padding: 0;
 }
 
-#cryjixximy .gt_table {
+#gjsyrqzzmc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -256,12 +309,12 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-left-color: #D3D3D3;
 }
 
-#cryjixximy .gt_caption {
+#gjsyrqzzmc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cryjixximy .gt_title {
+#gjsyrqzzmc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -273,7 +326,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-width: 0;
 }
 
-#cryjixximy .gt_subtitle {
+#gjsyrqzzmc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -285,7 +338,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-top-width: 0;
 }
 
-#cryjixximy .gt_heading {
+#gjsyrqzzmc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -297,13 +350,13 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#cryjixximy .gt_bottom_border {
+#gjsyrqzzmc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cryjixximy .gt_col_headings {
+#gjsyrqzzmc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -318,7 +371,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#cryjixximy .gt_col_heading {
+#gjsyrqzzmc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -338,7 +391,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   overflow-x: hidden;
 }
 
-#cryjixximy .gt_column_spanner_outer {
+#gjsyrqzzmc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -350,15 +403,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 4px;
 }
 
-#cryjixximy .gt_column_spanner_outer:first-child {
+#gjsyrqzzmc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cryjixximy .gt_column_spanner_outer:last-child {
+#gjsyrqzzmc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cryjixximy .gt_column_spanner {
+#gjsyrqzzmc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -370,11 +423,11 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   width: 100%;
 }
 
-#cryjixximy .gt_spanner_row {
+#gjsyrqzzmc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cryjixximy .gt_group_heading {
+#gjsyrqzzmc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -400,7 +453,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   text-align: left;
 }
 
-#cryjixximy .gt_empty_group_heading {
+#gjsyrqzzmc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -415,15 +468,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   vertical-align: middle;
 }
 
-#cryjixximy .gt_from_md > :first-child {
+#gjsyrqzzmc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cryjixximy .gt_from_md > :last-child {
+#gjsyrqzzmc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cryjixximy .gt_row {
+#gjsyrqzzmc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -442,7 +495,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   overflow-x: hidden;
 }
 
-#cryjixximy .gt_stub {
+#gjsyrqzzmc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -455,7 +508,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#cryjixximy .gt_stub_row_group {
+#gjsyrqzzmc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -469,15 +522,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   vertical-align: top;
 }
 
-#cryjixximy .gt_row_group_first td {
+#gjsyrqzzmc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cryjixximy .gt_row_group_first th {
+#gjsyrqzzmc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cryjixximy .gt_summary_row {
+#gjsyrqzzmc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -487,16 +540,16 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#cryjixximy .gt_first_summary_row {
+#gjsyrqzzmc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cryjixximy .gt_first_summary_row.thick {
+#gjsyrqzzmc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cryjixximy .gt_last_summary_row {
+#gjsyrqzzmc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -506,7 +559,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#cryjixximy .gt_grand_summary_row {
+#gjsyrqzzmc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -516,7 +569,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#cryjixximy .gt_first_grand_summary_row {
+#gjsyrqzzmc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -526,7 +579,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-top-color: #D3D3D3;
 }
 
-#cryjixximy .gt_last_grand_summary_row_top {
+#gjsyrqzzmc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -536,11 +589,11 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#cryjixximy .gt_striped {
+#gjsyrqzzmc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cryjixximy .gt_table_body {
+#gjsyrqzzmc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -549,7 +602,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#cryjixximy .gt_footnotes {
+#gjsyrqzzmc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -563,7 +616,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#cryjixximy .gt_footnote {
+#gjsyrqzzmc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -572,7 +625,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#cryjixximy .gt_sourcenotes {
+#gjsyrqzzmc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -586,7 +639,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#cryjixximy .gt_sourcenote {
+#gjsyrqzzmc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -594,63 +647,63 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#cryjixximy .gt_left {
+#gjsyrqzzmc .gt_left {
   text-align: left;
 }
 
-#cryjixximy .gt_center {
+#gjsyrqzzmc .gt_center {
   text-align: center;
 }
 
-#cryjixximy .gt_right {
+#gjsyrqzzmc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cryjixximy .gt_font_normal {
+#gjsyrqzzmc .gt_font_normal {
   font-weight: normal;
 }
 
-#cryjixximy .gt_font_bold {
+#gjsyrqzzmc .gt_font_bold {
   font-weight: bold;
 }
 
-#cryjixximy .gt_font_italic {
+#gjsyrqzzmc .gt_font_italic {
   font-style: italic;
 }
 
-#cryjixximy .gt_super {
+#gjsyrqzzmc .gt_super {
   font-size: 65%;
 }
 
-#cryjixximy .gt_footnote_marks {
+#gjsyrqzzmc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cryjixximy .gt_asterisk {
+#gjsyrqzzmc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cryjixximy .gt_indent_1 {
+#gjsyrqzzmc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cryjixximy .gt_indent_2 {
+#gjsyrqzzmc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cryjixximy .gt_indent_3 {
+#gjsyrqzzmc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cryjixximy .gt_indent_4 {
+#gjsyrqzzmc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cryjixximy .gt_indent_5 {
+#gjsyrqzzmc .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -667,7 +720,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   </thead>
   <tbody class="gt_table_body">
     <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &lt; 0 &amp; Opioid MD &lt; 0</td>
-<td headers="Probability" class="gt_row gt_right">0.77</td></tr>
+<td headers="Probability" class="gt_row gt_right">0.78</td></tr>
     <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &lt; 0 &amp; Opioid MD &gt; 0</td>
 <td headers="Probability" class="gt_row gt_right">0.19</td></tr>
     <tr><td headers="Outcome" class="gt_row gt_left">Pain MD &gt; 0 &amp; Opioid MD &lt; 0</td>
@@ -688,45 +741,38 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
 </section>
-<section id="sensitivity-analysis-using-other-priors" class="level4" data-number="4.1.4">
-<h4 data-number="4.1.4" class="anchored" data-anchor-id="sensitivity-analysis-using-other-priors"><span class="header-section-number">4.1.4</span> Sensitivity Analysis Using Other Priors</h4>
 </section>
-</section>
-</section>
-<section id="secondary-outcomes" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="secondary-outcomes"><span class="header-section-number">5</span> Secondary Outcomes</h2>
-<section id="dynamic-pain-at-48-and-72-hours" class="level4" data-number="5.0.1">
-<h4 data-number="5.0.1" class="anchored" data-anchor-id="dynamic-pain-at-48-and-72-hours"><span class="header-section-number">5.0.1</span> Dynamic Pain at 48 and 72 Hours</h4>
-</section>
-<section id="opioid-consumption-at-24-48-and-72-hours" class="level4" data-number="5.0.2">
-<h4 data-number="5.0.2" class="anchored" data-anchor-id="opioid-consumption-at-24-48-and-72-hours"><span class="header-section-number">5.0.2</span> Opioid Consumption at 24, 48 and 72 Hours</h4>
-</section>
-<section id="bivariate-posterior-probability-plots" class="level4" data-number="5.0.3">
-<h4 data-number="5.0.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plots"><span class="header-section-number">5.0.3</span> Bivariate Posterior Probability Plots</h4>
-</section>
-<section id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects" class="level4" data-number="5.0.4">
-<h4 data-number="5.0.4" class="anchored" data-anchor-id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects"><span class="header-section-number">5.0.4</span> Surgical Outcomes, Procedural Morbidity and Opioid Side-Effects</h4>
-<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-4_9829b06315e1eac01221880c2a88d575">
+<section id="sensitivity-analysis-with-different-priors-1" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="sensitivity-analysis-with-different-priors-1"><span class="header-section-number">4.4</span> Sensitivity Analysis with Different Priors</h3>
+<p>Choosing a prior for a Bayesian analysis is the most subjective component of the analysis. Here, we will perform a sensitivity analysis with different values of priors for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span>. The first prior is the informative prior, which is the weakly regularising <span class="math inline">\({\mu} ∽ N(0, 1)\)</span> and <span class="math inline">\({\tau} ∽ \operatorname{Half-Cauchy}(0, 0.5)\)</span> prior that we used in the primary analysis.</p>
+<p>The second prior is the vague prior, which imparts no information on the posterior estimate, and is given by <span class="math inline">\({\mu} ∽ N(0, 4)\)</span> and <span class="math inline">\({\tau} ∽ \operatorname{Half-Cauchy}(0, 4)\)</span>.</p>
+<p>The third prior is from <a href="https://pubmed.ncbi.nlm.nih.gov/25475839/">Turner et al (2015)</a>, which examines predictive distributions of for the heterogeneity of variable studies with variable outcomes. For the outcome of ‘pain’, the ‘pharmacological intervention vs placebo/control’ prior is specified by <span class="math inline">\({\tau} ∽ \operatorname{Log-Normal}(-1.83, 1.52^2)\)</span>. For the ‘pharmacological vs pharmacological’ group (for eg truncal blocks vs thoracic epidural), the specified prior is <span class="math inline">\({\tau} ∽ \operatorname{Log-Normal}(-2.06, 1.58^2)\)</span>. For the mean effect, we will use the informative prior, <span class="math inline">\({\mu} ∽ N(0, 1)\)</span>.</p>
+<p>As can be seen from the below table, the overall effect is robust to varying priors.</p>
+<div class="cell" data-hash="Statistical-Analysis_cache/html/tbl-prior-sensitivity_f71e0086d43d357860c056fa5a85a84c">
 <div class="cell-output-display">
+<div id="tbl-prior-sensitivity" class="anchored">
 
-<div id="bomsxskyye" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bomsxskyye table {
+<div id="awaysviyge" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#awaysviyge table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bomsxskyye thead, #bomsxskyye tbody, #bomsxskyye tfoot, #bomsxskyye tr, #bomsxskyye td, #bomsxskyye th {
+#awaysviyge thead, #awaysviyge tbody, #awaysviyge tfoot, #awaysviyge tr, #awaysviyge td, #awaysviyge th {
   border-style: none;
 }
 
-#bomsxskyye p {
+#awaysviyge p {
   margin: 0;
   padding: 0;
 }
 
-#bomsxskyye .gt_table {
+#awaysviyge .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -752,12 +798,12 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-left-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_caption {
+#awaysviyge .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bomsxskyye .gt_title {
+#awaysviyge .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -769,7 +815,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-width: 0;
 }
 
-#bomsxskyye .gt_subtitle {
+#awaysviyge .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -781,7 +827,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-top-width: 0;
 }
 
-#bomsxskyye .gt_heading {
+#awaysviyge .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -793,13 +839,13 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_bottom_border {
+#awaysviyge .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_col_headings {
+#awaysviyge .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -814,7 +860,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_col_heading {
+#awaysviyge .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -834,7 +880,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   overflow-x: hidden;
 }
 
-#bomsxskyye .gt_column_spanner_outer {
+#awaysviyge .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -846,15 +892,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 4px;
 }
 
-#bomsxskyye .gt_column_spanner_outer:first-child {
+#awaysviyge .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bomsxskyye .gt_column_spanner_outer:last-child {
+#awaysviyge .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bomsxskyye .gt_column_spanner {
+#awaysviyge .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -866,11 +912,11 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   width: 100%;
 }
 
-#bomsxskyye .gt_spanner_row {
+#awaysviyge .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bomsxskyye .gt_group_heading {
+#awaysviyge .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -896,7 +942,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   text-align: left;
 }
 
-#bomsxskyye .gt_empty_group_heading {
+#awaysviyge .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -911,15 +957,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   vertical-align: middle;
 }
 
-#bomsxskyye .gt_from_md > :first-child {
+#awaysviyge .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bomsxskyye .gt_from_md > :last-child {
+#awaysviyge .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bomsxskyye .gt_row {
+#awaysviyge .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -938,7 +984,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   overflow-x: hidden;
 }
 
-#bomsxskyye .gt_stub {
+#awaysviyge .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -951,7 +997,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#bomsxskyye .gt_stub_row_group {
+#awaysviyge .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -965,15 +1011,15 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   vertical-align: top;
 }
 
-#bomsxskyye .gt_row_group_first td {
+#awaysviyge .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bomsxskyye .gt_row_group_first th {
+#awaysviyge .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bomsxskyye .gt_summary_row {
+#awaysviyge .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -983,16 +1029,16 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#bomsxskyye .gt_first_summary_row {
+#awaysviyge .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_first_summary_row.thick {
+#awaysviyge .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bomsxskyye .gt_last_summary_row {
+#awaysviyge .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1002,7 +1048,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_grand_summary_row {
+#awaysviyge .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1012,7 +1058,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#bomsxskyye .gt_first_grand_summary_row {
+#awaysviyge .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1022,7 +1068,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-top-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_last_grand_summary_row_top {
+#awaysviyge .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1032,11 +1078,11 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_striped {
+#awaysviyge .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bomsxskyye .gt_table_body {
+#awaysviyge .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1045,7 +1091,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-bottom-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_footnotes {
+#awaysviyge .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1059,7 +1105,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_footnote {
+#awaysviyge .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1068,7 +1114,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#bomsxskyye .gt_sourcenotes {
+#awaysviyge .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1082,7 +1128,7 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   border-right-color: #D3D3D3;
 }
 
-#bomsxskyye .gt_sourcenote {
+#awaysviyge .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1090,63 +1136,574 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
   padding-right: 5px;
 }
 
-#bomsxskyye .gt_left {
+#awaysviyge .gt_left {
   text-align: left;
 }
 
-#bomsxskyye .gt_center {
+#awaysviyge .gt_center {
   text-align: center;
 }
 
-#bomsxskyye .gt_right {
+#awaysviyge .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bomsxskyye .gt_font_normal {
+#awaysviyge .gt_font_normal {
   font-weight: normal;
 }
 
-#bomsxskyye .gt_font_bold {
+#awaysviyge .gt_font_bold {
   font-weight: bold;
 }
 
-#bomsxskyye .gt_font_italic {
+#awaysviyge .gt_font_italic {
   font-style: italic;
 }
 
-#bomsxskyye .gt_super {
+#awaysviyge .gt_super {
   font-size: 65%;
 }
 
-#bomsxskyye .gt_footnote_marks {
+#awaysviyge .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bomsxskyye .gt_asterisk {
+#awaysviyge .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bomsxskyye .gt_indent_1 {
+#awaysviyge .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bomsxskyye .gt_indent_2 {
+#awaysviyge .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bomsxskyye .gt_indent_3 {
+#awaysviyge .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bomsxskyye .gt_indent_4 {
+#awaysviyge .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bomsxskyye .gt_indent_5 {
+#awaysviyge .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false"><caption>Table&nbsp;1:  <p>Sensitivity analysis using weakly informative, vague, and Turner et
+al. priors for this meta-analysis.</p> </caption>
+  <thead>
+    
+    <tr class="gt_col_headings gt_spanner_row">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="Statistical Model">Statistical Model</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="1" scope="col" id="Credible interval">
+        <span class="gt_column_spanner">Credible interval</span>
+      </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="1" scope="col" id="Prediction interval">
+        <span class="gt_column_spanner">Prediction interval</span>
+      </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="1" scope="col" id="τ">
+        <span class="gt_column_spanner">τ</span>
+      </th>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Mean Difference (median [95%CrI])">Mean Difference (median [95%CrI])</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Mean Difference (median [95%CrI])">Mean Difference (median [95%CrI])</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Median [95%CrI])">Median [95%CrI])</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><th id="stub_1_1" scope="row" class="gt_row gt_left gt_stub">Informative<span class="gt_footnote_marks gt_asterisk" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>*</sup></span></th>
+<td headers="stub_1_1 estimate" class="gt_row gt_left">-0.68 [-1.19, -0.17]</td>
+<td headers="stub_1_1 estimate.1" class="gt_row gt_left">-0.67 [-3.11, 1.66]</td>
+<td headers="stub_1_1 estimate.2" class="gt_row gt_left">1.15 [0.77, 1.60]</td></tr>
+    <tr><th id="stub_1_2" scope="row" class="gt_row gt_left gt_stub">Vague<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>†</sup></span></th>
+<td headers="stub_1_2 estimate" class="gt_row gt_left">-0.74 [-1.30, -0.19]</td>
+<td headers="stub_1_2 estimate.1" class="gt_row gt_left">-0.73 [-3.31, 1.70]</td>
+<td headers="stub_1_2 estimate.2" class="gt_row gt_left">1.20 [0.84, 1.71]</td></tr>
+    <tr><th id="stub_1_3" scope="row" class="gt_row gt_left gt_stub">Turner et al.<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>‡</sup></span></th>
+<td headers="stub_1_3 estimate" class="gt_row gt_left">-0.68 [-1.20, -0.16]</td>
+<td headers="stub_1_3 estimate.1" class="gt_row gt_left">-0.68 [-3.13, 1.63]</td>
+<td headers="stub_1_3 estimate.2" class="gt_row gt_left">1.13 [0.77, 1.57]</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks gt_asterisk" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>*</sup></span> μ prior: normal(0, 1); τ prior: cauchy(0, 0.5)</td>
+    </tr>
+    <tr>
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>†</sup></span> μ prior: normal(0, 4); τ prior: cauchy(0, 4)</td>
+    </tr>
+    <tr>
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>‡</sup></span> μ prior: normal(0, 1); τ prior: lognormal(-2.06, 1.58)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="secondary-outcomes" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="secondary-outcomes"><span class="header-section-number">5</span> Secondary Outcomes</h2>
+<section id="dynamic-pain-at-48-and-72-hours" class="level4" data-number="5.0.1">
+<h4 data-number="5.0.1" class="anchored" data-anchor-id="dynamic-pain-at-48-and-72-hours"><span class="header-section-number">5.0.1</span> Dynamic Pain at 48 and 72 Hours</h4>
+</section>
+<section id="opioid-consumption-at-24-48-and-72-hours" class="level4" data-number="5.0.2">
+<h4 data-number="5.0.2" class="anchored" data-anchor-id="opioid-consumption-at-24-48-and-72-hours"><span class="header-section-number">5.0.2</span> Opioid Consumption at 24, 48 and 72 Hours</h4>
+</section>
+<section id="bivariate-posterior-probability-plots" class="level4" data-number="5.0.3">
+<h4 data-number="5.0.3" class="anchored" data-anchor-id="bivariate-posterior-probability-plots"><span class="header-section-number">5.0.3</span> Bivariate Posterior Probability Plots</h4>
+</section>
+<section id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects" class="level4" data-number="5.0.4">
+<h4 data-number="5.0.4" class="anchored" data-anchor-id="surgical-outcomes-procedural-morbidity-and-opioid-side-effects"><span class="header-section-number">5.0.4</span> Surgical Outcomes, Procedural Morbidity and Opioid Side-Effects</h4>
+<div class="cell" data-hash="Statistical-Analysis_cache/html/unnamed-chunk-7_4240084a57681c13960d411862ac700d">
+<div class="cell-output-display">
+
+<div id="uvqxgfsivf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uvqxgfsivf table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#uvqxgfsivf thead, #uvqxgfsivf tbody, #uvqxgfsivf tfoot, #uvqxgfsivf tr, #uvqxgfsivf td, #uvqxgfsivf th {
+  border-style: none;
+}
+
+#uvqxgfsivf p {
+  margin: 0;
+  padding: 0;
+}
+
+#uvqxgfsivf .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#uvqxgfsivf .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#uvqxgfsivf .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#uvqxgfsivf .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#uvqxgfsivf .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#uvqxgfsivf .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#uvqxgfsivf .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#uvqxgfsivf .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#uvqxgfsivf .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#uvqxgfsivf .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#uvqxgfsivf .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#uvqxgfsivf .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#uvqxgfsivf .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#uvqxgfsivf .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#uvqxgfsivf .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uvqxgfsivf .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#uvqxgfsivf .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#uvqxgfsivf .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#uvqxgfsivf .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uvqxgfsivf .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#uvqxgfsivf .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uvqxgfsivf .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#uvqxgfsivf .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uvqxgfsivf .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#uvqxgfsivf .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#uvqxgfsivf .gt_left {
+  text-align: left;
+}
+
+#uvqxgfsivf .gt_center {
+  text-align: center;
+}
+
+#uvqxgfsivf .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#uvqxgfsivf .gt_font_normal {
+  font-weight: normal;
+}
+
+#uvqxgfsivf .gt_font_bold {
+  font-weight: bold;
+}
+
+#uvqxgfsivf .gt_font_italic {
+  font-style: italic;
+}
+
+#uvqxgfsivf .gt_super {
+  font-size: 65%;
+}
+
+#uvqxgfsivf .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#uvqxgfsivf .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#uvqxgfsivf .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#uvqxgfsivf .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#uvqxgfsivf .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#uvqxgfsivf .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#uvqxgfsivf .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1231,9 +1788,35 @@ y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
 <section id="wound-infusion" class="level4" data-number="6.0.4">
 <h4 data-number="6.0.4" class="anchored" data-anchor-id="wound-infusion"><span class="header-section-number">6.0.4</span> Wound Infusion</h4>
 </section>
+<section id="block-type" class="level4" data-number="6.0.5">
+<h4 data-number="6.0.5" class="anchored" data-anchor-id="block-type"><span class="header-section-number">6.0.5</span> Block Type</h4>
+<p>Truncal blocks are defined as transversus abdominus plane (TAP), rectus sheath, preperitoneal, paravertebral and erector spinae blocks. Here, we will look at each of these blocks with the different subgroups as above- single shot, placebo continuous infusion, thoracic epidural and wound infusion.</p>
+</section>
 </section>
 <section id="metaregression" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="metaregression"><span class="header-section-number">7</span> Metaregression</h2>
+<section id="variables-for-inclusion-in-the-metaregression-model" class="level4" data-number="7.0.1">
+<h4 data-number="7.0.1" class="anchored" data-anchor-id="variables-for-inclusion-in-the-metaregression-model"><span class="header-section-number">7.0.1</span> Variables for Inclusion in the Metaregression Model</h4>
+<p>Given that pain is a multidimensional perception that is influenced by a number of factors, it is reasonable to investigate whether the use of truncal blocks varies when these factors are taken into account. For pain, variables such as opioid type (given postoperatively) and analgesic adjuncts (such as paracetamol, NSAIDs and gabapentinoids) can influence pain and pain perception. Other variables that may also influence pain are sex, age and duration of surgery may result in aggregation bias, where there is an assumption that aggregated data also applies to individual data points. Hence, we will not perform a metaregression with those variables.</p>
+</section>
+<section id="priors-for-the-metaregression-model" class="level4" data-number="7.0.2">
+<h4 data-number="7.0.2" class="anchored" data-anchor-id="priors-for-the-metaregression-model"><span class="header-section-number">7.0.2</span> Priors for the Metaregression Model</h4>
+<p>The priors will be the same used for the primary analysis</p>
+</section>
+<section id="the-meta-regression-model" class="level4" data-number="7.0.3">
+<h4 data-number="7.0.3" class="anchored" data-anchor-id="the-meta-regression-model"><span class="header-section-number">7.0.3</span> The Meta-Regression Model</h4>
+<p>Given the aforementioned variables for inclusion into the model and the priors, the meta-regression model is given by the following:</p>
+<p><span class="math display">\[
+\begin{align*}
+y_i &amp; \sim Normal(\theta_i, \sigma_i^2) \tag{Likelihood} \\
+\theta_i &amp; \sim Normal(\mu, \tau^2)\\
+\mu &amp; =  \beta_{0} + \beta_{1}Opioid\ Type\ +\beta_{2}Paracetamol\ + \beta_{3}NSAIDs\ + \beta_{4}Gabapentinoids\\
+\\
+\beta_{i} &amp; \sim \operatorname{Normal}(0, 1) \tag{Priors} \\
+\tau &amp; \sim \operatorname{Half-Cauchy}(0, 0.5) \\
+\end{align*}
+\]</span> It should be noted that for the primary meta analysis model, the coefficient of interest was the intercept, which was denoted <span class="math inline">\(\alpha_{subgroup[k]}\)</span>. In this metaregression model, the intercept is given by <span class="math inline">\(\beta_{0}\)</span> and our coefficient of interest is that of the covariates in the model (ie Opioid Type, Paracetamol, NSAIDs and Gabapentinoids).</p>
+</section>
 </section>
 <section id="bayesian-sequential-analysis" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="bayesian-sequential-analysis"><span class="header-section-number">8</span> Bayesian Sequential Analysis</h2>
